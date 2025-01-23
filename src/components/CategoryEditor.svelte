@@ -5,6 +5,7 @@
     unsaved?: boolean;
   }
 
+  let requesting = false;
   export let categories: Array<Category>;
 
   let editableCategories: Array<EditableCategory> = categories.map(
@@ -18,6 +19,7 @@
     action: "create" | "update" | "delete",
     category: EditableCategory
   ) {
+    requesting = true;
     try {
       let endpoint = "";
       let method = "POST";
@@ -46,6 +48,7 @@
         error instanceof Error ? error.message : "An unknown error occurred";
 
       alert(`Error attempting action ${action.toUpperCase()}: ${errorMessage}`);
+      requesting = false;
     }
   }
 
@@ -70,31 +73,40 @@
   }
 </script>
 
-<ul>
-  <button on:click={addUnsavedCategory}>New Category</button>
+<button on:click={addUnsavedCategory}>New Category</button><br>
 
+<ul>
   {#each editableCategories as category, index}
     <li>
       <input
         type="text"
-        bind:value={category.categoryName}
         style={category.unsaved ? "font-style: italic; color: green;" : ""}
+        bind:value={category.categoryName}
+        disabled={requesting}
       />
 
       {#if category.unsaved}
-        <button on:click={() => handleCategoryAction("create", category)}>Create</button>
-        <button style="color: red;" on:click={() => discardUnsavedCategory(index)}>X</button>
+        <button on:click={() => handleCategoryAction("create", category)} disabled={requesting}>Create</button>
+        <button style="color: red;" on:click={() => discardUnsavedCategory(index)} disabled={requesting}>X</button>
       {:else}
-        <button on:click={() => handleCategoryAction("update", category)}>Update</button>
+        <button 
+            on:click={() => handleCategoryAction("update", category)}
+            disabled={requesting}
+        >Update</button>
         <button
           style="color: red;"
           on:click={() =>
             confirm("Are you sure?") &&
             handleCategoryAction("delete", category)}
+          disabled={requesting}
         >
             X
         </button>
       {/if}
     </li>
   {/each}
+
+  {#if requesting}
+    <p>Making request, please wait...</p>
+  {/if}
 </ul>

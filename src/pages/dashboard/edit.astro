@@ -20,6 +20,8 @@ const post = await prisma.post.findFirst({
 
 if (!post) return new Response(null, { status: 404 });
 
+const categories = await prisma.category.findMany();
+
 // In the event that something bad happens
 const errorMessage = Astro.cookies.get("error");
 if (errorMessage) Astro.cookies.delete("error");

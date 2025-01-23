@@ -8,9 +8,15 @@ export async function POST({ request, cookies }: APIContext) {
     try {
         const user = await getUserFromSession(cookies.get("wp-auth-session")?.value);
 
-        const { categoryName } = await request.json() as Category;
+        const { id, categoryName } = await request.json() as Category;
 
-        await prisma.category.create({ data: { categoryName } })
+        const categoryCount = await prisma.category.count({ where: { id } });
+        if (categoryCount == 0) throw new Error("Category does not exist.");
+
+        await prisma.category.update({
+            where: { id },
+            data: { categoryName }
+        })
 
         return new Response(null, { status: 200 })
     } catch (error) {
