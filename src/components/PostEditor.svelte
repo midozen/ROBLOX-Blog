@@ -62,7 +62,7 @@
               id={`category${id}`}
               name={`category${id}`}
               value={id}
-              checked={existingCategories.some(function(o) {return o["id"] === id})}
+              checked={existingCategories?.some(function(o) {return o["id"] === id}) ?? false}
             />
             {categoryName}
           </label><br />
