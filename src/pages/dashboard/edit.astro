@@ -27,6 +27,7 @@ if (errorMessage) Astro.cookies.delete("error");
 
 <Layout title="Roblox Developers' Journal » New Post">
   <a href="/dashboard">« Back to Dashboard</a><br /><br />
+  <h2>Edit a post</h2><br />
 
   {errorMessage && <small style="color: red;">{errorMessage.value}</small>}
   <PostEditor
