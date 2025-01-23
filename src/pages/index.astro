@@ -4,6 +4,8 @@ import Layout from "@layouts/Layout.astro";
 import Post from "@components/Post.astro";
 
 import { prisma } from "@utils/prisma";
+import { getRSSFeed } from "@utils/general";
+
 
 // How much posts to query per page
 const POSTS_PER_PAGE = 5;
@@ -13,6 +15,10 @@ const pageNumber = Math.max(1, Number(Astro.url.searchParams.get("paged")) || 1)
 const category = Astro.url.searchParams.get("cat") || "";
 const month = Astro.url.searchParams.get("m") || "";
 const searchQuery = Astro.url.searchParams.get("s") || "";
+const feed = Astro.url.searchParams.get("feed") || "";
+
+if (feed === "rss")
+  return await getRSSFeed();
 
 // Get the total number of posts & calculate the max page count
 const totalPosts = await prisma.post.count();
