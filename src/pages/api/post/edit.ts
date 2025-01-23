@@ -6,12 +6,21 @@ interface PostData {
   id: number;
   title: string;
   content: string;
+  categories: number[];
 }
 
 function validatePostData(data: FormData): PostData {
   const id = Number(data.get("postID")) as number;
   const title = data.get("title") as string;
   const content = data.get("content") as string;
+
+  // Extract all category IDs from fields that start with "category"
+  const categories: number[] = [];
+  data.forEach((value, key) => {
+    if (key.startsWith("category") && !isNaN(Number(value))) {
+      categories.push(Number(value)); // Convert value to number and add to categories array
+    }
+  });
 
   if (isNaN(id)) throw new Error("Invalid post Id");
 
@@ -21,7 +30,7 @@ function validatePostData(data: FormData): PostData {
   if (content.length < 8)
     throw new Error("Content must have at least 8 characters");
 
-  return { id, title, content };
+  return { id, title, content, categories };
 }
 
 export async function POST({ request, cookies, redirect }: APIContext) {
@@ -31,7 +40,7 @@ export async function POST({ request, cookies, redirect }: APIContext) {
     );
 
     const formData = await request.formData();
-    const { id, title, content } = validatePostData(formData);
+    const { id, title, content, categories } = validatePostData(formData);
 
     const postCount = await prisma.post.count({ where: { id } });
 
@@ -39,7 +48,11 @@ export async function POST({ request, cookies, redirect }: APIContext) {
 
     await prisma.post.update({
       where: { id },
-      data: { title, content },
+      data: { 
+        title, 
+        content, 
+        categories: { set: categories.map(id => ({ id }))} 
+      }
     });
 
     return redirect(`/post/${id}`);

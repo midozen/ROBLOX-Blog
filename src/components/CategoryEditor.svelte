@@ -98,8 +98,7 @@
           on:click={() =>
             confirm("Are you sure?") &&
             handleCategoryAction("delete", category)}
-          disabled={requesting}
-        >
+          disabled={requesting}>
             X
         </button>
       {/if}

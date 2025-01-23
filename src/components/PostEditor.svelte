@@ -8,6 +8,7 @@
   export let content: string = "";
   export let username: string; // Just for preview purposes
   export let categories: Array<{ id: number; categoryName: string }>;
+  export let existingCategories: Array<{ id: number; categoryName: string }>; // Dude I don't even know anymore
 
   let isPreviewMode = false;
   $: formAction = `/api/post/${postId ? "edit" : "new"}`;
@@ -51,7 +52,7 @@
       ></textarea>
     </fieldset>
 
-    {#if !postId}
+    <!-- {#if !postId} -->
       <fieldset>
         <legend>Categories:</legend>
         {#each categories as { id, categoryName }}
@@ -61,12 +62,13 @@
               id={`category${id}`}
               name={`category${id}`}
               value={id}
+              checked={existingCategories.some(function(o) {return o["id"] === id})}
             />
             {categoryName}
           </label><br />
         {/each}
       </fieldset>
-    {/if}
+    <!-- {/if} -->
     <br />
   {/if}
 
