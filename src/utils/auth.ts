@@ -45,11 +45,11 @@ export const getUserFromSession = async (token: string | undefined): Promise<Use
     throw new Error("No session token provided");
 
   const session = await prisma.session.findUnique({
-    where: {
-      token,
-    },
-    include: {
-      User: true,
+    where: { token },
+    select: {
+      User: {
+        select: { id: true, username: true }
+      }
     },
   });
 

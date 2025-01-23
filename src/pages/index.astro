@@ -6,56 +6,71 @@ import Post from "@components/Post.astro";
 import { prisma } from "@utils/prisma";
 
 // How much posts to query per page
-const TAKE = 5;
+const POSTS_PER_PAGE = 5;
 
-const pageNumber = Number(Astro.url.searchParams.get("paged")) || 1;
+// Extract and validate search paramters
+const pageNumber = Math.max(1, Number(Astro.url.searchParams.get("paged")) || 1);
 const category = Astro.url.searchParams.get("cat") || "";
 const month = Astro.url.searchParams.get("m") || "";
-const search = Astro.url.searchParams.get("s") || "";
+const searchQuery = Astro.url.searchParams.get("s") || "";
 
 // Get the total number of posts & calculate the max page count
 const totalPosts = await prisma.post.count();
-const MAX_PAGE_COUNT = Math.ceil(totalPosts / TAKE);
+const maxPageCount = Math.ceil(totalPosts / POSTS_PER_PAGE);
 
-// If the page is out of bounds, return a 404
-if (pageNumber < 1 || pageNumber > MAX_PAGE_COUNT) {
+// Validate page number
+if (pageNumber > maxPageCount) {
     return new Response(null, { status: 404 });
 }
 
-const SKIP = (pageNumber - 1) * TAKE;
+const skip = (pageNumber - 1) * POSTS_PER_PAGE;
 
-// TODO: actually fix month year search
+// Construct dynamic query conditions
+const queryConditions = {
+  // TODO: Fix month filtering
+  ...(month && {
+    dateCreated: {
+      gte: new Date(`${month.slice(0, 4)}-${month.slice(4)}`)
+    }
+  }),
+  ...(category && {
+    categories: {
+      some: {id: Number(category)}
+    }
+  }),
+  ...(searchQuery && {
+    title: { contains: searchQuery } 
+  })
+};
+
 const posts = await prisma.post.findMany({
   include: {
     categories: true,
     author: {
-      select: {
-        username: true,
-      },
-    },
+      select: { username: true }
+    }
   },
-  where: {
-	...(month && {dateCreated: { gte: new Date(month.slice(0, 4) + '-' + month.slice(4)) } }),
-	...(category && {categories: {some: {id: Number(category)}}}),
-	...(search && {title: { contains: search } })
-  },
-  skip: SKIP,
-  take: TAKE,
-  orderBy: { dateCreated: "desc"}
-  });
+  where: queryConditions,
+  skip,
+  take: POSTS_PER_PAGE,
+  orderBy: { dateCreated: "desc" }
+})
 ---
 
 <Layout title="Roblox Developers' Journal">
   {posts.length === 0 && (
-	<p>No results matched your query.</p>
+	  <p>No results matched your query.</p>
   )}
 
   {posts.map((post) => <Post post={post} />)}
-  {pageNumber !== 1 && (
-    <>
-      <a href={`/?paged=${pageNumber - 1}`}>« Previous Page</a> —
-    </> 
+
+  <!-- Start Pagination -->
+  {pageNumber > 1 && (
+    <><a href={`/?paged=${pageNumber - 1}`}>« Previous Page</a> —</> 
   )}
 
-  {pageNumber !== MAX_PAGE_COUNT && <a href={`/?paged=${pageNumber + 1}`}>Next Page »</a>}
+  {pageNumber < maxPageCount && (
+    <a href={`/?paged=${pageNumber + 1}`}>Next Page »</a>
+  )}
+  <!-- End Pagination -->
 </Layout>

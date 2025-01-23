@@ -8,29 +8,32 @@ const { user } = Astro.locals;
 const postID = Number(Astro.url.searchParams.get("id"));
 
 // Early return if the post ID isn't a number
-if (isNaN(postID)) 
-    return new Response(null, { status: 404 });
+if (isNaN(postID)) return new Response(null, { status: 404 });
 
 const post = await prisma.post.findFirst({
-    where: { id: postID },
-    select: {
-        title: true,
-        content: true,
-    }
+  where: { id: postID },
+  select: {
+    title: true,
+    content: true,
+  },
 });
 
-if (!post) 
-    return new Response(null, { status: 404 });
+if (!post) return new Response(null, { status: 404 });
+
+// In the event that something bad happens
+const errorMessage = Astro.cookies.get("error");
+if (errorMessage) Astro.cookies.delete("error");
 ---
 
 <Layout title="Roblox Developers' Journal » New Post">
-    <a href="/dashboard">« Back to Dashboard</a><br /><br />
-    
-    <PostEditor 
-        client:load 
-        username={user.username} 
-        postId={postID} 
-        title={post.title} 
-        content={post.content} 
-    />
+  <a href="/dashboard">« Back to Dashboard</a><br /><br />
+
+  {errorMessage && <small style="color: red;">{errorMessage.value}</small>}
+  <PostEditor
+    client:load
+    username={user.username}
+    postId={postID}
+    title={post.title}
+    content={post.content}
+  />
 </Layout>
