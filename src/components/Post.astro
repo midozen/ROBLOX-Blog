@@ -3,13 +3,22 @@ import { marked } from 'marked';
 import { formatDate } from "@utils/general";
 
 const { post } = Astro.props;
+const { user } = Astro.locals;
 
 const content = marked.parse(post.content ?? "Nothing.");
+
+console.log(user)
 ---
 
 <div id={`post-${post.id}`} class="post">
-    <span class="posted-by date">
-        {formatDate(post.dateCreated)}
+    <span class="posted-by">
+        <span class="date">{formatDate(post.dateCreated)}</span>
+        {user && (
+            <p>
+                <a href={`/dashboard/edit?id=${post.id}`}>Edit</a> or
+                <a href={`/api/delete?id=${post.id}`}>Delete</a>
+            </p>
+        )}
     </span>
 
     <h2 class="storytitle">

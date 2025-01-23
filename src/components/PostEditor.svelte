@@ -2,59 +2,76 @@
   import { formatDate } from "@utils/general";
   import { marked } from "marked";
 
+  // All the external variables so we can make this multi-purpose
   export let postId: number | null = null;
-
-  export let content: string = "";
   export let title: string = "New Blog Post";
+  export let content: string = "";
+  export let username: string; // Just for preview purposes
+  export let categories: Array<{ id: number; categoryName: string }>;
 
-  export let username: string;
-  export let categories: any[];
-
-  let preview = false;
-
-  console.log(postId);
+  let isPreviewMode = false;
+  $: formAction = `/api/post/${postId ? "edit" : "new"}`;
 </script>
 
 <form
   style="max-width: 502px; text-align: left;"
   method="POST"
-  action={`/api/post/${postId ? "edit" : "new"}`}
+  action={formAction}
 >
   {#if postId}
-  <input type="hidden" name="postID" value={postId}>
+    <input type="hidden" name="postID" value={postId} />
   {/if}
 
-  <input type="checkbox" bind:checked={preview} id="preview" />
-  <label for="preview">Preview Post</label>
-  <br />
+  <label>
+    <input type="checkbox" bind:checked={isPreviewMode} id="preview" />
+    Preview Post
+  </label>
 
-  <div style={preview ? "display: none;" : ""}>
+  <!-- Display Editor -->
+  {#if !isPreviewMode}
     <fieldset>
       <legend>Write Here:</legend>
-    <input type="text" name="title" id="title" bind:value={title} placeholder="Title" />
-    <br>
-    
-    <textarea
-      bind:value={content}
-      name="content"
-      style="min-width: 468px; max-width: 468px; height: 500px;"
-      placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing el..."
-    ></textarea>
+
+      <input
+        type="text"
+        name="title"
+        id="title"
+        bind:value={title}
+        placeholder="Title"
+        required
+      />
+      <br />
+
+      <textarea
+        bind:value={content}
+        name="content"
+        style="min-width: 468px; max-width: 468px; height: 500px;"
+        placeholder="Write your post content here..."
+        required
+      ></textarea>
     </fieldset>
 
     {#if !postId}
       <fieldset>
         <legend>Categories:</legend>
-        {#each categories as category, index}
-          <input type="checkbox" id={`category${index + 1}`} name={`category${index + 1}`} value={category.id}>
-          <label for={`category${index + 1}`}> {category.categoryName}</label><br>
+        {#each categories as { id, categoryName }}
+          <label>
+            <input
+              type="checkbox"
+              id={`category${id}`}
+              name={`category${id}`}
+              value={id}
+            />
+            {categoryName}
+          </label><br />
         {/each}
       </fieldset>
     {/if}
-    <br>
-  </div>
+    <br />
+  {/if}
 
-  <div style={preview ? "" : "display: none;"} class="post">
+  <!-- Display Preview -->
+  {#if isPreviewMode}
     <span class="posted-by date">
       {formatDate(new Date())}
     </span>
@@ -91,7 +108,11 @@
       </div>
       <div class="clear"></div>
     </div>
-  </div>
+  {/if}
 
-  <button type="submit" style={preview ? "display: none;" : ""}>Create</button>
+  {#if !isPreviewMode}
+    <button type="submit">
+      {postId ? 'Update' : 'Create'} Post
+    </button>
+  {/if}
 </form>

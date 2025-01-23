@@ -10,5 +10,10 @@ const categories = await prisma.category.findMany();
 
 <Layout title="Roblox Developers' Journal » New Post">
   <a href="/dashboard">« Back to Dashboard</a><br><br>
-  <PostEditor client:load username={user.username} categories={categories} postId={1} />
+  
+  <PostEditor 
+    client:load 
+    username={user.username} 
+    categories={categories} 
+  />
 </Layout>
