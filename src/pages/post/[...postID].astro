@@ -1,0 +1,33 @@
+---
+import Layout from "@layouts/Layout.astro";
+
+import Post from "@components/Post.astro";
+
+import { prisma } from "@utils/prisma";
+
+const { postID } = Astro.params;
+
+if (isNaN(Number(postID))) return new Response(null, { status: 404 });
+
+const post = await prisma.post.findFirst({
+    where: { id: Number(postID) },
+    include: {
+	categories: true,
+    author: {
+      select: {
+        username: true,
+      },
+    },
+  }
+})
+if (!post) return new Response(null, { status: 404 });
+
+---
+
+<Layout title={`Roblox Developers' Journal » ${post.title}`}>
+    <Post post={post} />
+    <h2 id="comments">No Comments</h2>
+    <p>No comments yet.</p>
+    <p><a href="#"><abbr title="Really Simple Syndication">RSS</abbr> feed for comments on this post.</a></p>
+    <p>Sorry, the comment form is closed at this time.</p>
+</Layout>

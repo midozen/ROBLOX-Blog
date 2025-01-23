@@ -9,6 +9,17 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.1.8"
+    "@astrojs/node": "^9.0.2",
+    "@astrojs/svelte": "^7.0.4",
+    "@prisma/client": "^6.2.1",
+    "astro": "^5.1.8",
+    "bcrypt": "^5.1.1",
+    "marked": "^15.0.6",
+    "svelte": "^5.19.2",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "prisma": "^6.2.1"
   }
 }

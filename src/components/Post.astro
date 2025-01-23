@@ -1,0 +1,44 @@
+---
+import { marked } from 'marked';
+import { formatDate } from "@utils/general";
+
+const { post } = Astro.props;
+
+const content = marked.parse(post.content ?? "Nothing.");
+---
+
+<div id={`post-${post.id}`} class="post">
+    <span class="posted-by date">
+        {formatDate(post.dateCreated)}
+    </span>
+
+    <h2 class="storytitle">
+        <a href={`/post/${post.id}`} rel="bookmark">
+            {post.title}
+        </a>
+    </h2>
+
+    <div class="storycontent">
+        <Fragment set:html={content}/>
+        <p>- {post.author.username}</p>
+
+        <div>
+            <a href="#" title="Bookmark using any bookmark manager!">
+                <img src="/images/button1-bm.gif" alt="AddThis Social Bookmark Button" width="125" height="16">
+            </a>
+        </div>
+        <br>
+    </div>
+    <div class="post-footer">
+		<div class="meta">
+            Posted in: 
+            <Fragment set:html={post.categories.map((category: any) => {
+                return `<a href="/?cat=${category.id}" title="View all posts in ${category.categoryName}" rel="category">${category.categoryName}</a>`;
+            }).join(", ") || "<i>No Categories</i>"}/> {/* Such a hacky solution */}
+        </div>
+		<div class="feedback">
+            <span>Comments Off</span>
+        </div>
+		<div class="clear"></div>
+	</div>
+</div>

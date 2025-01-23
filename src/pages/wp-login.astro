@@ -1,0 +1,25 @@
+---
+import Layout from "@layouts/Layout.astro";
+import bcrypt from "bcrypt";
+
+// probably the only way to do cross communication
+const errorMessage = Astro.cookies.get("error");
+
+if (errorMessage)
+    Astro.cookies.delete("error")
+
+// console.log(await bcrypt.hash("password", 10))
+---
+
+<Layout title="Roblox Developers' Journal">
+    <form action="/api/login" method="post">
+        <label for="username">Username:</label><br>
+        <input type="text" name="username" id="username"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" name="password" id="password">
+        <br>
+        {errorMessage && <small style="color: red;">{errorMessage.value}</small>}
+        <br>
+        <input type="submit" value="Log in">
+    </form>
+</Layout>
