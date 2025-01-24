@@ -3,9 +3,7 @@ import Layout from "@layouts/Layout.astro";
 
 import Post from "@components/Post.astro";
 
-import { prisma } from "@utils/prisma";
-import { getRSSFeed } from "@utils/general";
-
+import { prisma, getRSSFeed } from "@utils/prisma";
 
 // How much posts to query per page
 const POSTS_PER_PAGE = 5;
