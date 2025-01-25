@@ -1,5 +1,5 @@
-# ROBLOX 2006-2012 Blog
-Recreation of the ROBLOX Blog from 2006-2012 with **Astro + Prisma**
+# ROBLOX 2006-2011 Blog
+Recreation of the ROBLOX Blog from 2006-2011 with **Astro + Prisma**
 
 # Build Instructions
 
@@ -28,3 +28,4 @@ Recreation of the ROBLOX Blog from 2006-2012 with **Astro + Prisma**
     ```bash
     HOST=192.168.1.130 PORT=2456 node ./dist/server/entry.mjs
     ```
+*Follow the same instructions but on Step 3 use `npm run dev` if you're trying to make changes to the blog.*
