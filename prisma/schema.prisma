@@ -18,6 +18,7 @@ model User {
 model Post {
   id          Int        @id @default(autoincrement())
   title       String
+  slug        String     @unique  @default(cuid())
   content     String?    @db.Text
   dateCreated DateTime   @default(now())
   authorId    Int

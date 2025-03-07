@@ -6,12 +6,18 @@ const { user } = Astro.locals;
 
 const categories = await prisma.category.findMany();
 
+const posts = await prisma.post.findMany({
+  select: { title: true, slug: true, dateCreated: true },
+  orderBy: { dateCreated: "asc" },
+  take: 5
+});
+
 const firstDate = await prisma.post.findFirst({
   select: { dateCreated: true },
 });
 ---
 
-<div id="sidebar">
+<!-- <div id="sidebar">
   <p></p>
   <p><br /></p>
   <p></p>
@@ -52,18 +58,6 @@ const firstDate = await prisma.post.findFirst({
         </li>
       </ul>
     </li>
-
-    <!-- <li id="linkcat-9" class="widget widget_links">
-      <h2 class="widgettitle">Blogroll</h2>
-
-      <ul class="xoxo blogroll">
-        <li>
-          <a
-            href="https://cirkl.zone/Info/Privacy.aspx"
-            title="The Privacy Policy for ROBLOX">ROBLOX Privacy Policy</a>
-        </li>
-      </ul>
-    </li> -->
 
     <li id="archives-4" class="widget widget_archive">
       <h2 class="widgettitle">Archives</h2>
@@ -165,4 +159,238 @@ const firstDate = await prisma.post.findFirst({
       }
     });
   </script>
+</div> -->
+<div id="secondary" class="widget-area" role="complementary">
+  <aside id="text-6" class="widget widget_text">
+    <div class="textwidget">
+      <ul id="sidebarLinks">
+        <!-- <li id="sidebarLinkFacebook">
+          <a
+            href="http://facebook.com/roblox"
+            >Facebook</a
+          >
+        </li>
+        <li id="sidebarLinkYoutube">
+          <a
+            href="http://www.youtube.com/user/ROBLOX"
+            >YouTube Channel</a
+          >
+        </li>
+        <li id="sidebarLinkTwitter">
+          <a
+            href="http://twitter.com/ROBLOX"
+            >Twitter</a
+          >
+        </li> -->
+        <li id="sidebarLinkRss">
+          <a href="/?feed=rss">RSS</a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+  <aside id="search-3" class="widget widget_search">
+    <h3 class="widget-title">Search</h3>
+    <form method="get" id="searchform" action="/">
+      <label for="s" class="assistive-text">Search</label>
+      <input type="text" class="field" name="s" id="s" placeholder="Search" />
+      <input
+        type="submit"
+        class="submit"
+        name="submit"
+        id="searchsubmit"
+        value="Search"
+      />
+    </form>
+  </aside>
+  <aside id="recent-posts-3" class="widget widget_recent_entries">
+    <h3 class="widget-title">Recent Posts</h3>
+    <ul>
+      <!-- <li>
+        <a
+          href="/2012/01/roblox-game-conference-2012-save-the-date/"
+          title="ROBLOX Game Conference 2012 – save the date"
+          >ROBLOX Game Conference 2012 – save the date</a
+        >
+      </li>
+      <li>
+        <a
+          href="/2012/01/the-dream-of-lego-universe-and-its-subsequent-shutdown/"
+          title="The dream of LEGO Universe and its subsequent shutdown"
+          >The dream of LEGO Universe and its subsequent shutdown</a
+        >
+      </li>
+      <li>
+        <a
+          href="/2012/01/tech-demo-video-thumbnails/"
+          title="Tech Demo: Video Thumbnails">Tech Demo: Video Thumbnails</a
+        >
+      </li>
+      <li>
+        <a
+          href="/2012/01/expanded-browser-compatibility/"
+          title="Expanded Browser Compatibility"
+          >Expanded Browser Compatibility</a
+        >
+      </li>
+      <li>
+        <a
+          href="/2012/01/tech-demo-dynamic-lighting-exploration/"
+          title="Tech Demo: Dynamic Lighting Exploration"
+          >Tech Demo: Dynamic Lighting Exploration</a
+        >
+      </li> -->
+
+      {posts.map((post) => (
+        <li>
+          <a 
+            href={`${post.dateCreated.getFullYear()}/${post.dateCreated.getMonth().toString().padStart(2, "0")}/${post.slug}`} 
+            title={post.title}>
+            {post.title}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </aside>
+  <aside id="categories-3" class="widget widget_categories">
+    <h3 class="widget-title">Categories</h3>
+    <select name="cat" id="cat" class="postform">
+      <option value="-1">Select Category</option>
+      {categories.map((category) => (
+        <option class="level-0" value={category.id}>{category.categoryName}</option>
+      ))}
+    </select>
+    <script type="text/javascript">
+      var dropdown = document.getElementById("cat");
+
+      function onCatChange() {
+        if (dropdown.options[dropdown.selectedIndex].value > 0) {
+          location.href =
+            "/?cat=" +
+            dropdown.options[dropdown.selectedIndex].value;
+        }
+      }
+      dropdown.onchange = onCatChange;
+    </script>
+  </aside>
+  <!-- <aside id="better_rss_widget-3" class="widget widget_better_rss_widget">
+    <h3 class="widget-title">
+      <a
+        class="rsswidget"
+        href="https://api.twitter.com/1/statuses/user_timeline.rss?screen_name=roblox"
+        title="Syndicate this content"
+        .=""
+        target="_blank"
+        '=""
+      >
+        <img
+          style="background:orange;color:white;border:none;"
+          src="/wp-includes/images/rss.png"
+          alt="RSS"
+          width="14"
+          height="14"
+        />
+      </a>
+      <a
+        class="rsswidget"
+        href="http://twitter.com/ROBLOX"
+        title="Twitter updates from ROBLOX / ROBLOX."
+        target="_blank">Recent Tweets</a
+      >
+    </h3>
+    <ul>
+      <li>
+        <a
+          class="rsswidget"
+          href="http://twitter.com/ROBLOX/statuses/165558945086320640"
+          title="ROBLOX: RT @DavidBaszucki: Almost 1% of the objects in @amazon S3 @awscloud store are from @ROBLOX. We store 5 billion objects there. @jeffbarr ... […]"
+          target="_blank"
+          >ROBLOX: RT @DavidBaszucki: Almost 1% of the objects in @amazon S3
+          @awscloud store are from @ROBLOX. We store 5 billion objects there.
+          @jeffbarr ...</a
+        >
+      </li>
+      <li>
+        <a
+          class="rsswidget"
+          href="http://twitter.com/ROBLOX/statuses/165207038949990400"
+          title="ROBLOX: RT @TimLoduha: Looking for new ways to use #roblox ropes in levels for testing. Let us know your ideas. #rbxphysics […]"
+          target="_blank"
+          >ROBLOX: RT @TimLoduha: Looking for new ways to use #roblox ropes in
+          levels for testing. Let us know your ideas. #rbxphysics</a
+        >
+      </li>
+      <li>
+        <a
+          class="rsswidget"
+          href="http://twitter.com/ROBLOX/statuses/164496771010150401"
+          title="ROBLOX: RT @DavidBaszucki: #ROBLOX Game Conference 2012 will be held July 14 at the Santa Clara Convention Center - http://t.co/wFXvSXRf […]"
+          target="_blank"
+          >ROBLOX: RT @DavidBaszucki: #ROBLOX Game Conference 2012 will be held
+          July 14 at the Santa Clara Convention Center - http://t.co/wFXvSXRf</a
+        >
+      </li>
+      <li>
+        <a
+          class="rsswidget"
+          href="http://twitter.com/ROBLOX/statuses/164422459033010178"
+          title="ROBLOX: RT @mattdusekwho: More than 1.2 billion (!) thumbnails have been generated in the history of #ROBLOX. […]"
+          target="_blank"
+          >ROBLOX: RT @mattdusekwho: More than 1.2 billion (!) thumbnails have
+          been generated in the history of #ROBLOX.</a
+        >
+      </li>
+      <li>
+        <a
+          class="rsswidget"
+          href="http://twitter.com/ROBLOX/statuses/164233378193866752"
+          title="ROBLOX: RT @DavidBaszucki: LEGO Universe shuts down today. It was a beautiful product that many fans enjoyed. My analysis: http://t.co/xOQwBC6B. […]"
+          target="_blank"
+          >ROBLOX: RT @DavidBaszucki: LEGO Universe shuts down today. It was a
+          beautiful product that many fans enjoyed. My analysis:
+          http://t.co/xOQwBC6B.</a
+        >
+      </li>
+      <li>
+        <a
+          class="rsswidget"
+          href="http://twitter.com/ROBLOX/statuses/164043318970417153"
+          title="ROBLOX: RT @TheAlexKnapp: Latest @forbes is a writeup of internet game @roblox, which lets kids build and program their worlds: http://t.co/GJqVlTfy […]"
+          target="_blank"
+          >ROBLOX: RT @TheAlexKnapp: Latest @forbes is a writeup of internet
+          game @roblox, which lets kids build and program their worlds:
+          http://t.co/GJqVlTfy</a
+        >
+      </li>
+    </ul>
+  </aside> -->
+  <aside id="linkcat-9" class="widget widget_links">
+    <h3 class="widget-title">ROBLOX</h3>
+    <ul class="xoxo blogroll">
+      <li>
+        <a
+          href="http://wiki.cirkl.zone"
+          title="Articles for Lua scripting and building in ROBLOX Studio."
+          target=""
+          >Building/Scripting Wiki</a
+        >
+      </li>
+      <li>
+        <a
+          href="http://wiki.cirkl.zone/index.php/Change_Log"
+          rel="me"
+          title="A list of changes in each update of ROBLOX."
+          target="_blank"
+          >Product Change Log</a
+        >
+      </li>
+      <li>
+        <a
+          href="http://community.cirkl.zone/wallpapers"
+          title="ROBLOX wallpapers for your computer desktop."
+          target=""
+          >Wallpapers</a
+        >
+      </li>
+    </ul>
+  </aside>
 </div>
