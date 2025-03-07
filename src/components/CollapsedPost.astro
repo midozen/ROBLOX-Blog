@@ -109,6 +109,21 @@ const content = marked.parse(post.content?.slice(0, 256) ?? "Nothing.");
         </span>
       </span> - 
       <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDate(post.dateCreated)}</time>
+      {user && (
+          <span>
+            - 
+            <a href={`/dashboard/edit?id=${post.id}`}>Edit</a> or
+            <a
+              href="#"
+              onclick={`
+                      if (window.confirm("Are you sure you want to delete this post?")) {
+                          window.location = "/api/post/delete?id=${post.id}";
+                      }`}
+            >
+              Delete
+            </a>
+          </span>
+      )}
     </div>
     <div class="comments-link">
       <a href={`${getPostLink(post)}/#comments`} title={`Comment on ${post.title}`}></a>

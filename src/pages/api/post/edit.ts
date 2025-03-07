@@ -1,4 +1,5 @@
 import { getUserFromSession, loginUser } from "@utils/auth";
+import { getPostLink } from "@utils/general";
 import { prisma } from "@utils/prisma";
 import type { APIContext } from "astro";
 
@@ -46,7 +47,7 @@ export async function POST({ request, cookies, redirect }: APIContext) {
 
     if (postCount == 0) throw new Error("Post does not exist.");
 
-    await prisma.post.update({
+    const post = await prisma.post.update({
       where: { id },
       data: { 
         title, 
@@ -55,7 +56,7 @@ export async function POST({ request, cookies, redirect }: APIContext) {
       }
     });
 
-    return redirect(`/post/${id}`);
+    return redirect(getPostLink(post));
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred";

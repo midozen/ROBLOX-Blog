@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatDate } from "@utils/general";
+  import { formatDate, getPostLink } from "@utils/general";
   import { marked } from "marked";
 
   // All the external variables so we can make this multi-purpose
@@ -74,41 +74,66 @@
 
   <!-- Display Preview -->
   {#if isPreviewMode}
-    <span class="posted-by date">
-      {formatDate(new Date())}
-    </span>
-
-    <h2 class="storytitle">
-      <a href="#" rel="bookmark">
-        {title}
-      </a>
-    </h2>
-
-    <div class="storycontent">
-      <div>{@html marked(content)}</div>
-      <p>- {username}</p>
-
-      <div>
-        <a href="#" title="Bookmark using any bookmark manager!">
-          <img
-            src="/images/button1-bm.gif"
-            alt="AddThis Social Bookmark Button"
-            width="125"
-            height="16"
-          />
-        </a>
+    <article class={`post type-post status-publish format-standard hentry`}>
+      <header class="entry-header">
+        <h1 class="entry-title">
+          <a 
+            href="#"
+            title={title}
+            rel="bookmark"
+            >
+            {title}
+          </a>
+        </h1>
+        <div class="entry-meta">
+          <span class="by-author">
+            <span class="sep"> By </span> 
+            <span class="author vcard">
+              <a class="url fn n" href={`/author/${username}/`} title={`View all posts by ${username}`} rel="author">{username}</a>
+            </span>
+          </span> - 
+          <time class="entry-date" datetime={new Date().toISOString()}>{formatDate(new Date())}</time>
+        </div>
+      </header>
+      <div class="entry-content">
+        {@html marked(content)}
       </div>
-      <br />
-    </div>
-    <div class="post-footer">
-      <div class="meta">
-        Posted in:
-        <i>No Categories</i>
-      </div>
-      <div class="feedback">
-        <span>Comments Off</span>
-      </div>
-      <div class="clear"></div>
+    
+      <footer class="entry-meta">
+          This entry was posted in
+          <!-- <Fragment
+            set:html={post.categories
+              .map((category: any) => {
+                return `<a href="/category/${category.categoryName}" title="View all posts in ${category.categoryName}" rel="category tag">${category.categoryName}</a>`;
+              })
+              .join(", ") || "<i>No Categories</i>"}
+          /> -->
+          by
+          <a href={`/author/${username}/`}>{username}</a>
+          . Bookmark the
+          <a href="#"
+            title={title}
+            rel="bookmark"
+            >permalink</a>.
+    
+          <div id="author-info">
+            <div id="author-avatar">
+              <img alt="" src={`https://cirkl-b.beanburrito.tech/images/pfp/default.png`} class="avatar avatar-68 photo" width="68" height="68">
+            </div>
+            <div id="author-description">
+              <h2>About {username}</h2>
+              {"Blog Poster"}
+              <div id="author-link">
+                <a href={`/author/${username}/`} rel="author">
+                  View all posts by {username} <span class="meta-nav">→</span></a>
+              </div>
+            </div>
+          </div>
+      </footer>
+    </article>
+    
+    <div id="comments">
+      <p class="nocomments"></p>
     </div>
   {/if}
 

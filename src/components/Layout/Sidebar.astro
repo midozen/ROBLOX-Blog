@@ -393,4 +393,27 @@ const firstDate = await prisma.post.findFirst({
       </li>
     </ul>
   </aside>
+
+  {user && (
+    <aside class="widget widget_links">
+      <h3 class="widget-title">{user.username}</h3>
+      <ul class="xoxo blogroll">
+        <li>
+          <a href="/dashboard/new" title="Create a new blog post.">
+            New Post
+          </a>
+        </li>
+        <li>
+          <a href="/dashboard" title="Go to the dashboard.">
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="/api/logout">
+            Log Out
+          </a>
+        </li>
+      </ul>
+    </aside>
+  )}
 </div>
