@@ -11,6 +11,10 @@ model User {
   id       Int       @id @default(autoincrement())
   username String    @unique
   password String
+
+  pfp      String   @default("default.png")
+  bio      String?  @default("Blog Poster")
+
   posts    Post[]
   sessions Session[]
 }

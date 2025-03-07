@@ -15,6 +15,8 @@ const post = await prisma.post.findFirst({
     author: {
       select: {
         username: true,
+        pfp: true,
+        bio: true,
       },
     },
   },
@@ -30,7 +32,6 @@ const prevPost = await prisma.post.findFirst({
     },
   },
   select: {
-    title: true,
     slug: true,
     dateCreated: true,
   },
@@ -46,7 +47,6 @@ const nextPost = await prisma.post.findFirst({
     },
   },
   select: {
-    title: true,
     slug: true,
     dateCreated: true,
   },
@@ -63,16 +63,16 @@ const nextPost = await prisma.post.findFirst({
 
       {prevPost && (
         <span class="nav-previous">
-          <a href={getPostLink(post)} rel="prev">
-            <span class="meta-nav">←</span> {prevPost.title}
+          <a href={getPostLink(prevPost)} rel="prev">
+            <span class="meta-nav">←</span> Previous
           </a>
         </span>
       )}
 
       {nextPost && (
         <span class="nav-next">
-          <a href={getPostLink(post)} rel="next">
-            {nextPost.title} <span class="meta-nav">→</span>
+          <a href={getPostLink(nextPost)} rel="next">
+            Next <span class="meta-nav">→</span>
           </a>
         </span>
       )}

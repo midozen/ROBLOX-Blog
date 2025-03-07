@@ -4,21 +4,23 @@ import { formatDate, getPostLink } from "@utils/general";
 
 interface Props {
   post: {
-      author: {
-          username: string;
-      };
-      categories: {
-          id: number;
-          categoryName: string;
-      }[];
-  } & {
-      content: string | null;
-      id: number;
-      dateCreated: Date;
-      slug: string;
-      title: string;
-      authorId: number;
-  };
+    author: {
+        username: string;
+        pfp: string;
+        bio: string | null;
+    };
+    categories: {
+        id: number;
+        categoryName: string;
+    }[];
+} & {
+    slug: string;
+    id: number;
+    title: string;
+    content: string | null;
+    dateCreated: Date;
+    authorId: number;
+};
 }
 
 const { post } = Astro.props;
@@ -71,11 +73,11 @@ const content = marked.parse(post.content ?? "Nothing.");
 
       <div id="author-info">
         <div id="author-avatar">
-          <img alt="" src="https://web.archive.org/web/20120205233834im_/http://0.gravatar.com/avatar/cacf62b2eade60e1935cc6857306d5e6?s=68&amp;d=http%3A%2F%2Fblog.roblox.com%2Fwp-includes%2Fimages%2Fblank.gif&amp;r=G" class="avatar avatar-68 photo" width="68" height="68">
+          <img alt="" src={`https://cirkl-b.beanburrito.tech/images/pfp/${post.author.pfp}`} class="avatar avatar-68 photo" width="68" height="68">
         </div>
         <div id="author-description">
           <h2>About {post.author.username}</h2>
-          ADD TO DATABASE BIOGRAPHY
+          {post.author.bio ?? "Blog Poster"}
           <div id="author-link">
             <a href={`/author/${post.author.username}/`} rel="author">
               View all posts by {post.author.username} <span class="meta-nav">→</span></a>
