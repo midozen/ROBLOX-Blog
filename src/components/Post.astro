@@ -1,6 +1,25 @@
 ---
 import { marked } from "marked";
-import { formatDate } from "@utils/general";
+import { formatDate, getPostLink } from "@utils/general";
+
+interface Props {
+  post: {
+      author: {
+          username: string;
+      };
+      categories: {
+          id: number;
+          categoryName: string;
+      }[];
+  } & {
+      content: string | null;
+      id: number;
+      dateCreated: Date;
+      slug: string;
+      title: string;
+      authorId: number;
+  };
+}
 
 const { post } = Astro.props;
 const { user } = Astro.locals;
@@ -8,64 +27,64 @@ const { user } = Astro.locals;
 const content = marked.parse(post.content ?? "Nothing.");
 ---
 
-<div id={`post-${post.id}`} class="post">
-  <span class="posted-by">
-    <span class="date">{formatDate(post.dateCreated)}</span>
-    {
-      user && (
-        <p>
-          <a href={`/dashboard/edit?id=${post.id}`}>Edit</a> or
-          <a
-            href="#"
-            onclick={`
-                    if (window.confirm("Are you sure you want to delete this post?")) {
-                        window.location = "/api/post/delete?id=${post.id}";
-                    }`}
-          >
-            Delete
-          </a>
-        </p>
-      )
-    }
-  </span>
-
-  <h2 class="storytitle">
-    <a href={`/post/${post.id}`} rel="bookmark">
-      {post.title}
-    </a>
-  </h2>
-
-  <div class="storycontent">
-    <Fragment set:html={content} />
-    <p>- {post.author.username}</p>
-
-    <div>
-      <a href="#" title="Bookmark using any bookmark manager!">
-        <img
-          src="/images/button1-bm.gif"
-          alt="AddThis Social Bookmark Button"
-          width="125"
-          height="16"
-        />
+<article id={`post-${post.id}`} class={`post-${post.id} post type-post status-publish format-standard hentry`}>
+  <header class="entry-header">
+    <h1 class="entry-title">
+      <a 
+        href={getPostLink(post)}
+        title={post.title}
+        rel="bookmark"
+        >
+        {post.title}
       </a>
+    </h1>
+    <div class="entry-meta">
+      <span class="by-author">
+        <span class="sep"> By </span> 
+        <span class="author vcard">
+          <a class="url fn n" href={`/author/${post.author.username}/`} title={`View all posts by ${post.author.username}`} rel="author">{post.author.username}</a>
+        </span>
+      </span> - 
+      <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDate(post.dateCreated)}</time>
     </div>
-    <br />
+  </header>
+  <div class="entry-content">
+    <Fragment set:html={content} />
   </div>
-  <div class="post-footer">
-    <div class="meta">
-      Posted in:
+
+  <footer class="entry-meta">
+      This entry was posted in
       <Fragment
         set:html={post.categories
           .map((category: any) => {
-            return `<a href="/?cat=${category.id}" title="View all posts in ${category.categoryName}" rel="category">${category.categoryName}</a>`;
+            return `<a href="/category/${category.categoryName}" title="View all posts in ${category.categoryName}" rel="category tag">${category.categoryName}</a>`;
           })
           .join(", ") || "<i>No Categories</i>"}
       />
-      {/* Such a hacky solution */}
-    </div>
-    <div class="feedback">
-      <span>Comments Off</span>
-    </div>
-    <div class="clear"></div>
-  </div>
+      by
+      <a href={`/author/${post.author.username}/`}>{post.author.username}</a>
+      . Bookmark the
+      <a href={getPostLink(post)}
+        title={post.title}
+        rel="bookmark"
+        >permalink</a>.
+
+      <div id="author-info">
+        <div id="author-avatar">
+          <img alt="" src="https://web.archive.org/web/20120205233834im_/http://0.gravatar.com/avatar/cacf62b2eade60e1935cc6857306d5e6?s=68&amp;d=http%3A%2F%2Fblog.roblox.com%2Fwp-includes%2Fimages%2Fblank.gif&amp;r=G" class="avatar avatar-68 photo" width="68" height="68">
+        </div>
+        <div id="author-description">
+          <h2>About {post.author.username}</h2>
+          ADD TO DATABASE BIOGRAPHY
+          <div id="author-link">
+            <a href={`/author/${post.author.username}/`} rel="author">
+              View all posts by {post.author.username} <span class="meta-nav">→</span></a>
+          </div>
+        </div>
+      </div>
+  </footer>
+</article>
+
+<div id="comments">
+  <p class="nocomments"></p>
 </div>

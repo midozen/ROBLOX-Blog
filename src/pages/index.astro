@@ -1,7 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 
-import Post from "@components/Post.astro";
+import CollapsedPost from "@components/CollapsedPost.astro";
 
 import { prisma, getRSSFeed } from "@utils/prisma";
 
@@ -66,7 +66,7 @@ const posts = await prisma.post.findMany({
 	  <p>No results matched your query.</p>
   )}
 
-  {posts.map((post) => <Post post={post} />)}
+  {posts.map((post) => <CollapsedPost post={post} />)}
 
   <!-- Start Pagination -->
   {pageNumber > 1 && (

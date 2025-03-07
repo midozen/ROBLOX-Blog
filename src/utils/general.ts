@@ -49,3 +49,14 @@ export function generateMonthYears(startDate?: Date) {
 
   return monthYears;
 }
+
+export function getPostLink(post: {
+  author: {
+      username: string;
+  }; categories: {
+      id: number;
+      categoryName: string;
+  }[];
+} & { content: string | null; id: number; dateCreated: Date; slug: string; title: string; authorId: number; }): string {
+  return `/${post.dateCreated.getFullYear()}/${post.dateCreated.getMonth().toString().padStart(2, "0")}/${post.slug}`;
+}

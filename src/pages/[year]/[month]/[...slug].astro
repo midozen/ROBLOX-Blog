@@ -1,0 +1,83 @@
+---
+import Layout from "@layouts/Layout.astro";
+
+import Post from "@components/Post.astro";
+
+import { prisma } from "@utils/prisma";
+import { getPostLink } from "@utils/general";
+
+const { year, month, slug } = Astro.params;
+
+const post = await prisma.post.findFirst({
+  where: { slug },
+  include: {
+    categories: true,
+    author: {
+      select: {
+        username: true,
+      },
+    },
+  },
+});
+
+if (!post) 
+  return new Response(null, { status: 404 });
+
+const prevPost = await prisma.post.findFirst({
+  where: {
+    dateCreated: {
+      lt: post.dateCreated,
+    },
+  },
+  select: {
+    title: true,
+    slug: true,
+    dateCreated: true,
+  },
+  orderBy: {
+    dateCreated: "desc",
+  },
+});
+
+const nextPost = await prisma.post.findFirst({
+  where: {
+    dateCreated: {
+      gt: post.dateCreated,
+    },
+  },
+  select: {
+    title: true,
+    slug: true,
+    dateCreated: true,
+  },
+  orderBy: {
+    dateCreated: "asc",
+  },
+});
+---
+
+<Layout title={`Roblox Developers' Journal » ${post.title}`}>
+  {(prevPost || nextPost) && (
+    <nav id="nav-single">
+      <h3 class="assistive-text">Post navigation</h3>
+
+      {prevPost && (
+        <span class="nav-previous">
+          <a href={getPostLink(post)} rel="prev">
+            <span class="meta-nav">←</span> {prevPost.title}
+          </a>
+        </span>
+      )}
+
+      {nextPost && (
+        <span class="nav-next">
+          <a href={getPostLink(post)} rel="next">
+            {nextPost.title} <span class="meta-nav">→</span>
+          </a>
+        </span>
+      )}
+    </nav>
+  )}
+
+  <Post post={post} />
+</Layout>
