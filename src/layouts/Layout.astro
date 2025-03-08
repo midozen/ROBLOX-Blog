@@ -3,7 +3,10 @@ import Footer from "@components/Layout/Footer.astro";
 import Header from "@components/Layout/Header.astro";
 import Sidebar from "@components/Layout/Sidebar.astro";
 
-const { title } = Astro.props;
+const { title, type = "blog" } = Astro.props;
+
+
+
 ---
 
 <!doctype html>
@@ -23,7 +26,7 @@ const { title } = Astro.props;
 			}
 		</style>
 	</head>
-	<body class="blog two-column right-sidebar">
+	<body class={`${type} two-column right-sidebar`}>
 		<script src="/js/jquery-1.4.4.min.js" type="text/javascript"></script>
 
 		<nav id="menuUtilities" role="navigation">
@@ -54,28 +57,8 @@ const { title } = Astro.props;
 			</div>
 		</nav>
 
-		<!-- <div id="container">
-			<Header />
-			<div id="content">
-				<slot />
-			</div>
-			<Sidebar />
-			<Footer />
-		</div> -->
-
 		<div id="page" class="hfeed">
-			<header id="branding" role="banner">
-				<a href="/">
-					<img src="/images/header_04.png" alt="" width="900" height="108">
-				</a>
-
-				<hgroup>
-					<h1 id="site-title">
-						<span><a href="/" title="Roblox Blog" rel="home">Roblox Blog</a></span>
-					</h1>
-					<h2 id="site-description">Free Games at Cirkl.zone</h2>
-				</hgroup>
-			</header>
+			<Header />
 
 			<div id="main">
 				<div id="primary">

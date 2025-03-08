@@ -1,0 +1,28 @@
+---
+
+interface Props {
+    user: any,
+    linkAuthor?: boolean;
+}
+
+const { user, linkAuthor } = Astro.props;
+---
+
+<div id="author-info">
+  <div id="author-avatar">
+    <img
+      alt=""
+      src={`https://cirkl-b.beanburrito.tech/images/pfp/${user.pfp}`}
+      class="avatar avatar-68 photo"
+      width="68"
+      height="68"
+    />
+  </div>
+  <div id="author-description">
+    <h2>About {user.username}</h2>
+    {user.bio ?? "Blog Poster"}
+    {linkAuthor && (
+      <div id="author-link"><a href={`/author/${user.username}/`} rel="author">View all posts by {user.username} <span class="meta-nav">→</span></a></div>
+    )}
+  </div>
+</div>

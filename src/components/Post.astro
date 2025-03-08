@@ -1,6 +1,7 @@
 ---
 import { marked } from "marked";
 import { formatDate, getPostLink } from "@utils/general";
+import Author from "./Author.astro";
 
 interface Props {
   post: {
@@ -86,7 +87,7 @@ const content = marked.parse(post.content ?? "Nothing.");
         rel="bookmark"
         >permalink</a>.
 
-      <div id="author-info">
+      <!-- <div id="author-info">
         <div id="author-avatar">
           <img alt="" src={`https://cirkl-b.beanburrito.tech/images/pfp/${post.author.pfp}`} class="avatar avatar-68 photo" width="68" height="68">
         </div>
@@ -98,7 +99,9 @@ const content = marked.parse(post.content ?? "Nothing.");
               View all posts by {post.author.username} <span class="meta-nav">→</span></a>
           </div>
         </div>
-      </div>
+      </div> -->
+
+      <Author user={post.author} linkAuthor={true} />
   </footer>
 </article>
 

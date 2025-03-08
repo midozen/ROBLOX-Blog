@@ -1,0 +1,41 @@
+---
+import Layout from "@layouts/Layout.astro";
+
+import Author from "@components/Author.astro";
+import CollapsedPost from "@components/CollapsedPost.astro";
+
+import { prisma } from "@utils/prisma";
+
+const { username } = Astro.params;
+
+const user = await prisma.user.findFirst({
+  where: { username },
+  include: {
+    posts: {
+      include: {
+        categories: true,
+        author: {
+          select: {
+            username: true,
+            pfp: true,
+            bio: true,
+          },
+        },
+      },
+      orderBy: {
+        dateCreated: "desc",
+      },
+      take: 5,
+    },
+  },
+});
+
+if (!user) 
+    return new Response(null, { status: 404 });
+---
+
+<Layout title={`${user.username} | Roblox Blog`} type="archive">
+    <Author user={user} />
+
+    {user.posts.map((post) => <CollapsedPost post={post} />)}
+</Layout>

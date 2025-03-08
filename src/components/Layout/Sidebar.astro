@@ -1,5 +1,5 @@
 ---
-import { generateMonthYears } from "@utils/general";
+import { generateMonthYears, getPostLink } from "@utils/general";
 import { prisma } from "@utils/prisma";
 
 const { user } = Astro.locals;
@@ -205,45 +205,10 @@ const firstDate = await prisma.post.findFirst({
   <aside id="recent-posts-3" class="widget widget_recent_entries">
     <h3 class="widget-title">Recent Posts</h3>
     <ul>
-      <!-- <li>
-        <a
-          href="/2012/01/roblox-game-conference-2012-save-the-date/"
-          title="ROBLOX Game Conference 2012 – save the date"
-          >ROBLOX Game Conference 2012 – save the date</a
-        >
-      </li>
-      <li>
-        <a
-          href="/2012/01/the-dream-of-lego-universe-and-its-subsequent-shutdown/"
-          title="The dream of LEGO Universe and its subsequent shutdown"
-          >The dream of LEGO Universe and its subsequent shutdown</a
-        >
-      </li>
-      <li>
-        <a
-          href="/2012/01/tech-demo-video-thumbnails/"
-          title="Tech Demo: Video Thumbnails">Tech Demo: Video Thumbnails</a
-        >
-      </li>
-      <li>
-        <a
-          href="/2012/01/expanded-browser-compatibility/"
-          title="Expanded Browser Compatibility"
-          >Expanded Browser Compatibility</a
-        >
-      </li>
-      <li>
-        <a
-          href="/2012/01/tech-demo-dynamic-lighting-exploration/"
-          title="Tech Demo: Dynamic Lighting Exploration"
-          >Tech Demo: Dynamic Lighting Exploration</a
-        >
-      </li> -->
-
       {posts.map((post) => (
         <li>
           <a 
-            href={`${post.dateCreated.getFullYear()}/${post.dateCreated.getMonth().toString().padStart(2, "0")}/${post.slug}`} 
+            href={getPostLink(post)} 
             title={post.title}>
             {post.title}
           </a>
@@ -385,7 +350,7 @@ const firstDate = await prisma.post.findFirst({
       </li>
       <li>
         <a
-          href="http://community.cirkl.zone/wallpapers"
+          href="/wallpapers"
           title="ROBLOX wallpapers for your computer desktop."
           target=""
           >Wallpapers</a

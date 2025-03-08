@@ -56,7 +56,7 @@ const nextPost = await prisma.post.findFirst({
 });
 ---
 
-<Layout title={`Roblox Developers' Journal » ${post.title}`}>
+<Layout title={`${post.title} > Roblox Blog`}>
   {(prevPost || nextPost) && (
     <nav id="nav-single">
       <h3 class="assistive-text">Post navigation</h3>

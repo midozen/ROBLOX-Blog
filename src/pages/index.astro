@@ -4,9 +4,10 @@ import Layout from "@layouts/Layout.astro";
 import CollapsedPost from "@components/CollapsedPost.astro";
 
 import { prisma, getRSSFeed } from "@utils/prisma";
+import Pagination from "@components/Pagination.astro";
 
 // How much posts to query per page
-const POSTS_PER_PAGE = 5;
+const POSTS_PER_PAGE = 1;
 
 // Extract and validate search paramters
 const pageNumber = Math.max(1, Number(Astro.url.searchParams.get("paged")) || 1);
@@ -61,20 +62,16 @@ const posts = await prisma.post.findMany({
 })
 ---
 
-<Layout title="Roblox Developers' Journal">
+<Layout title="Roblox Blog > Free Games at Roblox.com">
+  {pageNumber > 1 && (
+    <Pagination pageNumber={pageNumber} maxPageCount={maxPageCount} />
+  )}
+
   {posts.length === 0 && (
 	  <p>No results matched your query.</p>
   )}
 
   {posts.map((post) => <CollapsedPost post={post} />)}
 
-  <!-- Start Pagination -->
-  {pageNumber > 1 && (
-    <><a href={`/?paged=${pageNumber - 1}`}>« Previous Page</a> —</> 
-  )}
-
-  {pageNumber < maxPageCount && (
-    <a href={`/?paged=${pageNumber + 1}`}>Next Page »</a>
-  )}
-  <!-- End Pagination -->
+  <Pagination pageNumber={pageNumber} maxPageCount={maxPageCount} />
 </Layout>
