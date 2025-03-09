@@ -118,7 +118,7 @@
     
           <div id="author-info">
             <div id="author-avatar">
-              <img alt="" src={`https://cirkl-b.beanburrito.tech/images/pfp/default.png`} class="avatar avatar-68 photo" width="68" height="68">
+              <img alt="" src={`${import.meta.env.PUBLIC_CDN_URL}/images/pfp/default.png`} class="avatar avatar-68 photo" width="68" height="68">
             </div>
             <div id="author-description">
               <h2>About {username}</h2>

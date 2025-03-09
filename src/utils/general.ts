@@ -51,5 +51,5 @@ export function generateMonthYears(startDate?: Date) {
 }
 
 export function getPostLink(post: any) {
-  return `/${post.dateCreated.getFullYear()}/${post.dateCreated.getMonth().toString().padStart(2, "0")}/${post.slug}`;
+  return `/${post.dateCreated.getFullYear()}/${(post.dateCreated.getMonth() + 1).toString().padStart(2, "0")}/${post.slug}`;
 }

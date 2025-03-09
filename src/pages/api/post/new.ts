@@ -42,6 +42,7 @@ export async function POST({ request, cookies, redirect }: APIContext) {
         const post = await prisma.post.create({
             data: {
                 title,
+                slug: title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
                 content,
                 categories: { connect: categories.map(id => ({ id })) },
                 authorId: user.id

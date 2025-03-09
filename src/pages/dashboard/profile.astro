@@ -2,14 +2,24 @@
 import { prisma } from "@utils/prisma";
 
 import Layout from "@layouts/Layout.astro";
+import Author from "@components/Author.astro";
 
 const { user } = Astro.locals;
+
+const userData = await prisma.user.findUnique({
+  where: {
+    id: user.id,
+  },
+});
 ---
 
 <Layout title="Roblox Blog">
   <a href="/dashboard">« Back to Dashboard</a><br /><br />
   <h2 class="page-title">Profile Settings</h2><br>
 
+  <Author user={userData} />
+
+  <hr>
 
   <!-- change profile picture -->
     <form action="/api/profile" method="post" enctype="multipart/form-data">
@@ -23,7 +33,7 @@ const { user } = Astro.locals;
     <!-- change bio -->
     <form action="/api/profile" method="post">
         <label for="bio">Bio</label>
-        <textarea name="bio" id="bio" rows="4" cols="50" placeholder="Enter your bio here..."></textarea><br>
+        <textarea name="bio" id="bio" rows="4" cols="50" placeholder="Enter your bio here..." >{userData?.bio}</textarea><br>
         <button type="submit">Change Bio</button>
     </form>
 </Layout>
