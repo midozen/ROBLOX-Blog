@@ -1,17 +1,23 @@
 ---
 const { pageNumber, maxPageCount } = Astro.props;
+
+function updateQueryParams(page: number) {
+    const params = new URLSearchParams(Astro.url.search);
+    params.set('paged', page.toString());
+    return `${Astro.url.pathname}?${params.toString()}`;
+}
 ---
 
 <nav id="nav-below">
-    <h3 class="assistive-text">Post navigation</h3>
-    <div class="nav-previous">
-      {pageNumber < maxPageCount && (
-        <a href={`/?paged=${pageNumber + 1}`}><span class="meta-nav">←</span> Older posts</a>
-      )}
-    </div>
-    <div class="nav-next">
-      {pageNumber > 1 && (
-        <a href={`/?paged=${pageNumber - 1}`}>Newer posts <span class="meta-nav">→</span></a>
-      )}
-    </div>
-  </nav>
+        <h3 class="assistive-text">Post navigation</h3>
+        <div class="nav-previous">
+                {pageNumber < maxPageCount && (
+                        <a href={updateQueryParams(pageNumber + 1)}><span class="meta-nav">←</span> Older posts</a>
+                )}
+        </div>
+        <div class="nav-next">
+                {pageNumber > 1 && (
+                        <a href={updateQueryParams(pageNumber - 1)}>Newer posts <span class="meta-nav">→</span></a>
+                )}
+        </div>
+</nav>

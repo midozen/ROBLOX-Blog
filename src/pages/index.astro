@@ -1,13 +1,13 @@
 ---
 import Layout from "@layouts/Layout.astro";
 
-import CollapsedPost from "@components/CollapsedPost.astro";
+import CollapsedPost from "@components/Post/CollapsedPost.astro";
 
 import { prisma, getRSSFeed } from "@utils/prisma";
 import Pagination from "@components/Pagination.astro";
 
 // How much posts to query per page
-const POSTS_PER_PAGE = 1;
+const POSTS_PER_PAGE = 8;
 
 // Extract and validate search paramters
 const pageNumber = Math.max(1, Number(Astro.url.searchParams.get("paged")) || 1);

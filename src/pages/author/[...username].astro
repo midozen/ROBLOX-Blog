@@ -2,11 +2,29 @@
 import Layout from "@layouts/Layout.astro";
 
 import Author from "@components/Author.astro";
-import CollapsedPost from "@components/CollapsedPost.astro";
+import CollapsedPost from "@components/Post/CollapsedPost.astro";
 
 import { prisma } from "@utils/prisma";
+import Pagination from "@components/Pagination.astro";
+
+const POSTS_PER_PAGE = 8;
 
 const { username } = Astro.params;
+const pageNumber = Math.max(
+  1,
+  Number(Astro.url.searchParams.get("paged")) || 1
+);
+
+// Get the total number of posts & calculate the max page count
+const totalPosts = await prisma.post.count({ where: { author: { username } } });
+const maxPageCount = Math.ceil(totalPosts / POSTS_PER_PAGE);
+
+// Validate page number
+if (pageNumber > maxPageCount) {
+  return new Response(null, { status: 404 });
+}
+
+const skip = (pageNumber - 1) * POSTS_PER_PAGE;
 
 const user = await prisma.user.findFirst({
   where: { username },
@@ -25,17 +43,36 @@ const user = await prisma.user.findFirst({
       orderBy: {
         dateCreated: "desc",
       },
-      take: 5,
+      skip,
+      take: POSTS_PER_PAGE,
     },
   },
 });
 
-if (!user) 
-    return new Response(null, { status: 404 });
+if (!user) return new Response(null, { status: 404 });
 ---
 
 <Layout title={`${user.username} | Roblox Blog`} type="archive">
-    <Author user={user} />
+  <header class="page-header">
+    <h1 class="page-title author">
+      Author Archives: <span class="vcard"
+        ><a
+          class="url fn n"
+          href={`/author/${user.username}/`}
+          title={user.username}
+          rel="me">{user.username}</a
+        ></span
+      >
+    </h1>
+  </header>
 
-    {user.posts.map((post) => <CollapsedPost post={post} />)}
+  <Author user={user} />
+
+  {pageNumber > 1 && (
+      <Pagination pageNumber={pageNumber} maxPageCount={maxPageCount} />
+    )}
+
+  {user.posts.map((post) => <CollapsedPost post={post} />)}
+
+  <Pagination pageNumber={pageNumber} maxPageCount={maxPageCount} />
 </Layout>

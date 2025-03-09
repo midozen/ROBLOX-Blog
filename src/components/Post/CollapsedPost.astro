@@ -25,6 +25,7 @@ const { post } = Astro.props;
 const { user } = Astro.locals;
 
 const content = marked.parse(post.content?.slice(0, 256) ?? "Nothing.");
+// const content = marked.parse(post.content ?? "Nothing.");
 ---
 
 <!-- <div id={`post-${post.id}`} class="post">

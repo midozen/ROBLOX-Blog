@@ -1,6 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import PostEditor from "@components/PostEditor.svelte";
+import PostEditor from "@components/Editors/PostEditor.svelte";
 import { prisma } from "@utils/prisma";
 
 const { user } = Astro.locals;
@@ -13,9 +13,9 @@ const errorMessage = Astro.cookies.get("error");
 if (errorMessage) Astro.cookies.delete("error");
 ---
 
-<Layout title="Roblox Developers' Journal » New Post">
+<Layout title="Roblox Blog > New Post">
   <a href="/dashboard">« Back to Dashboard</a><br /><br />
-  <h2>Create a new post</h2><br />
+  <h2 class="page-title">Create a new post</h2><br />
 
   {errorMessage && <small style="color: red;">{errorMessage.value}</small>}
   <PostEditor client:load username={user.username} categories={categories} />

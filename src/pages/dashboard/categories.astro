@@ -2,14 +2,14 @@
 import { prisma } from "@utils/prisma";
 
 import Layout from "@layouts/Layout.astro";
-import CategoryEditor from "@components/CategoryEditor.svelte";
+import CategoryEditor from "@components/Editors/CategoryEditor.svelte";
 
 const categories = await prisma.category.findMany();
 ---
 
-<Layout title="Roblox Developers' Journal">
+<Layout title="Roblox Blog">
   <a href="/dashboard">« Back to Dashboard</a><br /><br />
-  <h2>Category Editor</h2><br>
+  <h2 class="page-title">Category Editor</h2><br>
 
     <CategoryEditor client:load categories={categories} />
 </Layout>

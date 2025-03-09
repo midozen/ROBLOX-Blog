@@ -1,4 +1,5 @@
-import { getUserFromSession, loginUser } from "@utils/auth";
+import { getUserFromSession } from "@utils/auth";
+import { getPostLink } from "@utils/general";
 import { prisma } from "@utils/prisma";
 import type { APIContext } from "astro";
 
@@ -47,7 +48,7 @@ export async function POST({ request, cookies, redirect }: APIContext) {
             }
         })
 
-        return redirect(`/post/${post.id}`);
+        return redirect(getPostLink(post));
     } catch (error) {
         const errorMessage =
             error instanceof Error ? error.message : "An unknown error occurred";

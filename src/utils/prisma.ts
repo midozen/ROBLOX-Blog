@@ -5,7 +5,7 @@ export const prisma = new PrismaClient();
 
 export async function getRSSFeed(): Promise<Response> {
     const FEED_CONFIG = {
-      title: "Roblox Developers' Journal",
+      title: "Roblox Blog",
       siteUrl: "http://blog.cirkl.zone",
       description: "The Roblog",
       language: "en"
