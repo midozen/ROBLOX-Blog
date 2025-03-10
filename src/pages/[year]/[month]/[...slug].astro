@@ -56,25 +56,25 @@ const nextPost = await prisma.post.findFirst({
 });
 ---
 
-<Layout title={`${post.title} > Roblox Blog`}>
+<Layout title={`${post.title} > Roblox Blog`} type="blog paged">
   {(prevPost || nextPost) && (
-    <nav id="nav-single">
+    <nav id="nav-above">
       <h3 class="assistive-text">Post navigation</h3>
 
       {prevPost && (
-        <span class="nav-previous">
+        <div class="nav-previous">
           <a href={getPostLink(prevPost)} rel="prev">
-            <span class="meta-nav">←</span> Previous
+            <span class="meta-nav">←</span> Older posts
           </a>
-        </span>
+        </div>
       )}
 
       {nextPost && (
-        <span class="nav-next">
+        <div class="nav-next">
           <a href={getPostLink(nextPost)} rel="next">
-            Next <span class="meta-nav">→</span>
+            Newer posts <span class="meta-nav">→</span>
           </a>
-        </span>
+        </div>
       )}
     </nav>
   )}

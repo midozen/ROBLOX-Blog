@@ -15,25 +15,34 @@ const userData = await prisma.user.findUnique({
 
 <Layout title="Roblox Blog">
   <a href="/dashboard">« Back to Dashboard</a><br /><br />
-  <h2 class="page-title">Profile Settings</h2><br>
+  <h2 class="page-title">Profile Settings</h2><br />
 
   <Author user={userData} />
 
-  <hr>
+  <hr />
 
-  <!-- change profile picture -->
-    <form action="/api/profile" method="post" enctype="multipart/form-data">
-        <label for="profilePicture">Profile Picture</label>
-        <input type="file" name="profilePicture" id="profilePicture" accept="image/*"><br>
-        <button type="submit">Change Profile Picture</button>
-    </form>
+  <form action="/api/profile" method="post" enctype="multipart/form-data">
+    <label for="profilePicture">Profile Picture</label>
+    <input
+      type="file"
+      name="profilePicture"
+      id="profilePicture"
+      accept="image/*"
+    /><br />
+    <button type="submit">Change Profile Picture</button>
+  </form>
 
-    <hr>
+  <hr />
 
-    <!-- change bio -->
-    <form action="/api/profile" method="post">
-        <label for="bio">Bio</label>
-        <textarea name="bio" id="bio" rows="4" cols="50" placeholder="Enter your bio here..." >{userData?.bio}</textarea><br>
-        <button type="submit">Change Bio</button>
-    </form>
+  <form action="/api/profile" method="post">
+    <label for="bio">Bio</label>
+    <textarea
+      name="bio"
+      id="bio"
+      rows="4"
+      cols="50"
+      placeholder="Enter your bio here...">{userData?.bio}</textarea
+    ><br />
+    <button type="submit">Change Bio</button>
+  </form>
 </Layout>
