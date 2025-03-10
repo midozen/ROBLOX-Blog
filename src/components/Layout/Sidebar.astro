@@ -1,5 +1,5 @@
 ---
-import { generateMonthYears, getPostLink } from "@utils/general";
+import { getPostLink } from "@utils/general";
 import { prisma } from "@utils/prisma";
 
 const { user } = Astro.locals;
@@ -12,9 +12,7 @@ const posts = await prisma.post.findMany({
   take: 5
 });
 
-const firstDate = await prisma.post.findFirst({
-  select: { dateCreated: true },
-});
+const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
 ---
 
 <div id="secondary" class="widget-area" role="complementary">
@@ -65,7 +63,7 @@ const firstDate = await prisma.post.findFirst({
       {posts.map((post) => (
         <li>
           <a 
-            href={getPostLink(post)} 
+            href={getPostLink(post, adjustDisplayDates)} 
             title={post.title}>
             {post.title}
           </a>

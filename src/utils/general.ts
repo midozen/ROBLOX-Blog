@@ -1,3 +1,5 @@
+import type { Post } from "./types";
+
 export function formatDate(date: Date, accurateDates: Boolean = false): string {
   let day = date.getDate();
   let month = date.toLocaleString("default", { month: "long" });
@@ -23,17 +25,14 @@ export function formatDate(date: Date, accurateDates: Boolean = false): string {
   return `${month} ${day}${daySuffix}, ${year}`;
 }
 
-export function formatWebsiteDomain(domain: string) {
+export function formatWebsiteDomain(domain: string, accurateDates: Boolean = false) {
   const parts = domain.split(".");
 
   return parts[0].toUpperCase() + "." + parts[1];
 }
 
-export function generateMonthYears(startDate?: Date) {
-  const monthYears: Array<{
-    num: string;
-    formatted: string;
-  }> = [];
+export function generateMonthYears(startDate?: Date): Array<{ num: string; formatted: string; }> {
+  const monthYears: Array<{ num: string; formatted: string; }> = [];
 
   const start = new Date(startDate ?? new Date());
   const current = new Date();
@@ -64,6 +63,18 @@ export function generateMonthYears(startDate?: Date) {
   return monthYears;
 }
 
-export function getPostLink(post: any) {
-  return `/${post.dateCreated.getFullYear()}/${(post.dateCreated.getMonth() + 1).toString().padStart(2, "0")}/${post.slug}`;
+export function getPostLink(post: any, accurateDates: Boolean = false) {
+  let day = post.dateCreated.getDate();
+  let month = post.dateCreated.getMonth()
+  let year = post.dateCreated.getFullYear();
+
+  if (accurateDates) {
+    if (year < 2025 || (year === 2025 && (month < 1 || (month === 1 && day < 28)))) {
+      year -= 14;
+    } else {
+      year -= 13;
+    }
+  }
+
+  return `/${year}/${(month + 1).toString().padStart(2, "0")}/${post.slug}`;
 }
