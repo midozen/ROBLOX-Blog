@@ -17,149 +17,6 @@ const firstDate = await prisma.post.findFirst({
 });
 ---
 
-<!-- <div id="sidebar">
-  <p></p>
-  <p><br /></p>
-  <p></p>
-
-  <ul>
-    <li id="search-3" class="widget widget_search">
-      <h2 class="widgettitle">Search</h2>
-      <form role="search" method="get" id="searchform" action="/">
-        <div>
-          <label class="screen-reader-text" for="s">Search for:</label>
-          <input type="text" value="" name="s" id="s" />
-          <input type="submit" id="searchsubmit" value="Search" />
-        </div>
-      </form>
-    </li>
-    <li id="categories-3" class="widget widget_categories">
-      <h2 class="widgettitle">Categories</h2>
-      <ul>
-        {
-          categories.map((category) => (
-            <li class="cat-item cat-item-2">
-              <a href={`/?cat=${category.id}`}>{category.categoryName}</a>
-            </li>
-          ))
-        }
-      </ul>
-    </li>
-
-    <li id="linkcat-10" class="widget widget_links">
-      <h2 class="widgettitle">ROBLOX</h2>
-
-      <ul class="xoxo blogroll">
-        <li>
-          <a
-            href="https://cirkl.zone/Info/Privacy.aspx"
-            title="The Privacy Policy for ROBLOX">Privacy Policy</a
-          >
-        </li>
-      </ul>
-    </li>
-
-    <li id="archives-4" class="widget widget_archive">
-      <h2 class="widgettitle">Archives</h2>
-      <ul>
-        {
-          generateMonthYears(firstDate?.dateCreated!).map((date) => (
-            <li>
-              <a href={`/?m=${date.num}`} title={date.formatted} class="date">
-                {date.formatted}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </li>
-    <li id="meta-3" class="widget widget_meta">
-      <h2 class="widgettitle">Meta</h2>
-      <ul>
-        {user ? (
-          <li><b>{user.username}</b></li>
-          <li><a href="/dashboard">Dashboard</a></li>
-          <li><a href="/api/logout">Log out</a></li>
-          <br />
-        ) : (
-          <li><a href="/wp-login">Log in</a></li>
-        )}
-        <li>
-          <input type="checkbox" name="larp-mode" id="larp-mode" />
-          <label for="larp-mode">Adjust Display Dates</label>
-        </li>
-      </ul>
-    </li>
-  </ul>
-
-  <script is:inline>
-    $(document).ready(function () {
-      // Check the cookie to see if LARP mode is enabled
-      let larpModeEnabled = getCookie("larp-mode") === "true";
-
-      $("#larp-mode").attr("checked", larpModeEnabled);
-  
-      if (larpModeEnabled)
-        updateDates();
-  
-      // Listen for click events on the #larp-mode checkbox
-      $("#larp-mode").click(function () {
-        let isChecked = $(this).is(":checked");
-  
-        // Save the state to a cookie
-        setCookie("larp-mode", isChecked, 7); // Expires in 7 days
-  
-        // Update the dates when the checkbox is clicked
-        updateDates();
-      });
-  
-      // Function to update the dates
-      function updateDates() {
-        $(".date").each(function () {
-          let value = $(this).text().trim();
-          if (value && value.length >= 4) {
-            let lastFour = parseInt(value.slice(-4));
-  
-            if (!isNaN(lastFour)) {
-              let newValue;
-              if ($("#larp-mode").is(":checked")) {
-                newValue = lastFour - 14;
-              } else {
-                newValue = lastFour + 14;
-              }
-              $(this).html(value.slice(0, -4) + newValue);
-            } else {
-              console.warn(`Last 4 characters of value "${value}" are not numeric.`);
-            }
-          } else {
-            console.warn(`Value "${value}" is too short or invalid.`);
-          }
-        });
-      }
-  
-      // Function to set a cookie
-      function setCookie(name, value, days) {
-        let date = new Date();
-        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-        let expires = "expires=" + date.toUTCString();
-        document.cookie = name + "=" + value + ";" + expires + ";path=/";
-      }
-  
-      // Function to get a cookie
-      function getCookie(name) {
-        let nameEQ = name + "=";
-        let ca = document.cookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-          let c = ca[i].trim();
-          if (c.indexOf(nameEQ) === 0) {
-            return c.substring(nameEQ.length, c.length);
-          }
-        }
-        return null;
-      }
-    });
-  </script>
-</div> -->
 <div id="secondary" class="widget-area" role="complementary">
   <aside id="text-6" class="widget widget_text">
     <div class="textwidget">
@@ -333,7 +190,7 @@ const firstDate = await prisma.post.findFirst({
     <ul class="xoxo blogroll">
       <li>
         <a
-          href="http://wiki.cirkl.zone"
+          href={`http://wiki.${import.meta.env.PUBLIC_WEBSITE_URL}`}
           title="Articles for Lua scripting and building in ROBLOX Studio."
           target=""
           >Building/Scripting Wiki</a
@@ -341,7 +198,7 @@ const firstDate = await prisma.post.findFirst({
       </li>
       <li>
         <a
-          href="http://wiki.cirkl.zone/index.php/Change_Log"
+          href={`http://wiki.${import.meta.env.PUBLIC_WEBSITE_URL}/index.php/Change_Log`}
           rel="me"
           title="A list of changes in each update of ROBLOX."
           target="_blank"

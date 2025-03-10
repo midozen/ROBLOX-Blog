@@ -1,7 +1,15 @@
-export function formatDate(date: Date): string {
-  const day = date.getDate();
-  const month = date.toLocaleString("default", { month: "long" });
-  const year = date.getFullYear();
+export function formatDate(date: Date, accurateDates: Boolean = false): string {
+  let day = date.getDate();
+  let month = date.toLocaleString("default", { month: "long" });
+  let year = date.getFullYear();
+
+  if (accurateDates) {
+    if (year < 2025 || (year === 2025 && (date.getMonth() < 1 || (date.getMonth() === 1 && day < 28)))) {
+      year -= 14;
+    } else {
+      year -= 13;
+    }
+  }
 
   let daySuffix = "th";
   if (day === 1 || day === 21 || day === 31) {
@@ -13,6 +21,12 @@ export function formatDate(date: Date): string {
   }
 
   return `${month} ${day}${daySuffix}, ${year}`;
+}
+
+export function formatWebsiteDomain(domain: string) {
+  const parts = domain.split(".");
+
+  return parts[0].toUpperCase() + "." + parts[1];
 }
 
 export function generateMonthYears(startDate?: Date) {

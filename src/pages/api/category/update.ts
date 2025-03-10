@@ -2,7 +2,7 @@ import { getUserFromSession, loginUser } from "@utils/auth";
 import { prisma } from "@utils/prisma";
 import type { APIContext } from "astro";
 
-import type { Category } from "@utils/types";
+import type { Category } from "@prisma/client";
 
 export async function POST({ request, cookies }: APIContext) {
     try {

@@ -1,3 +1,9 @@
+---
+import { formatWebsiteDomain } from "@utils/general";
+
+const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
+---
+
 <header id="branding" role="banner">
     <a href="/">
         <img src="/images/header_04.png" alt="" width="900" height="108">
@@ -7,6 +13,6 @@
         <h1 id="site-title">
             <span><a href="/" title="Roblox Blog" rel="home">Roblox Blog</a></span>
         </h1>
-        <h2 id="site-description">Free Games at Cirkl.zone</h2>
+        <h2 id="site-description">Free Games at {adjustDisplayDates ? "ROBLOX.com" : formatWebsiteDomain(import.meta.env.PUBLIC_WEBSITE_URL)}</h2>
     </hgroup>
 </header>

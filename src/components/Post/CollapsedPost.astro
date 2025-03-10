@@ -1,95 +1,20 @@
 ---
 import { marked } from "marked";
+
 import { formatDate, getPostLink } from "@utils/general";
+import type { Post } from "@utils/types";
 
 interface Props {
-  post: {
-      author: {
-          username: string;
-      };
-      categories: {
-          id: number;
-          categoryName: string;
-      }[];
-  } & {
-      content: string | null;
-      id: number;
-      dateCreated: Date;
-      slug: string;
-      title: string;
-      authorId: number;
-  };
+  post: Post;
 }
 
 const { post } = Astro.props;
 const { user } = Astro.locals;
 
 const content = marked.parse(post.content?.slice(0, 256) ?? "Nothing.");
-// const content = marked.parse(post.content ?? "Nothing.");
+
+const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
 ---
-
-<!-- <div id={`post-${post.id}`} class="post">
-  <span class="posted-by">
-    <span class="date">{formatDate(post.dateCreated)}</span>
-    {
-      user && (
-        <p>
-          <a href={`/dashboard/edit?id=${post.id}`}>Edit</a> or
-          <a
-            href="#"
-            onclick={`
-                    if (window.confirm("Are you sure you want to delete this post?")) {
-                        window.location = "/api/post/delete?id=${post.id}";
-                    }`}
-          >
-            Delete
-          </a>
-        </p>
-      )
-    }
-  </span>
-
-  <h2 class="storytitle">
-    <a href={`/post/${post.id}`} rel="bookmark">
-      {post.title}
-    </a>
-  </h2>
-
-  <div class="storycontent">
-    <Fragment set:html={content} />
-    <p>- {post.author.username}</p>
-
-    <div>
-      <a href="#" title="Bookmark using any bookmark manager!">
-        <img
-          src="/images/button1-bm.gif"
-          alt="AddThis Social Bookmark Button"
-          width="125"
-          height="16"
-        />
-      </a>
-    </div>
-    <br />
-  </div>
-  <div class="post-footer">
-    <div class="meta">
-      Posted in:
-      <Fragment
-        set:html={post.categories
-          .map((category: any) => {
-            return `<a href="/?cat=${category.id}" title="View all posts in ${category.categoryName}" rel="category">${category.categoryName}</a>`;
-          })
-          .join(", ") || "<i>No Categories</i>"}
-      />
-      {/* Such a hacky solution */}
-    </div>
-    <div class="feedback">
-      <span>Comments Off</span>
-    </div>
-    <div class="clear"></div>
-  </div>
-</div> -->
-
 
 <article id={`post-${post.id}`} class={`post-${post.id} post type-post status-publish format-standard hentry`}>
   <header class="entry-header">
@@ -109,7 +34,7 @@ const content = marked.parse(post.content?.slice(0, 256) ?? "Nothing.");
           <a class="url fn n" href={`/author/${post.author.username}/`} title={`View all posts by ${post.author.username}`} rel="author">{post.author.username}</a>
         </span>
       </span> - 
-      <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDate(post.dateCreated)}</time>
+      <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDate(post.dateCreated, adjustDisplayDates)}</time>
       {user && (
           <span>
             - 

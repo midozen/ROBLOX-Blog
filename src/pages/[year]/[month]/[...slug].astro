@@ -3,23 +3,14 @@ import Layout from "@layouts/Layout.astro";
 
 import Post from "@components/Post/Post.astro";
 
-import { prisma } from "@utils/prisma";
+import { postInclude, prisma } from "@utils/prisma";
 import { getPostLink } from "@utils/general";
 
 const { year, month, slug } = Astro.params;
 
 const post = await prisma.post.findFirst({
   where: { slug },
-  include: {
-    categories: true,
-    author: {
-      select: {
-        username: true,
-        pfp: true,
-        bio: true,
-      },
-    },
-  },
+  include: postInclude
 });
 
 if (!post) 

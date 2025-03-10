@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Category } from "@utils/types";
+  import type { Category } from "@prisma/client";
 
   interface EditableCategory extends Category {
     unsaved?: boolean;

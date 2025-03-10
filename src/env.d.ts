@@ -12,6 +12,7 @@ interface ImportMetaEnv {
   readonly R2_SECRET_ACCESS_KEY: string;
   readonly R2_BUCKET_NAME: string;
   readonly PUBLIC_CDN_URL: string;
+  readonly PUBLIC_WEBSITE_URL: string;
 }
 
 interface ImportMeta {

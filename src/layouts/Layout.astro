@@ -3,10 +3,11 @@ import Footer from "@components/Layout/Footer.astro";
 import Header from "@components/Layout/Header.astro";
 import Sidebar from "@components/Layout/Sidebar.astro";
 
-const { title, type = "blog" } = Astro.props;
+import { formatWebsiteDomain } from "@utils/general";
 
+const { title = "Roblox Blog", type = "blog" } = Astro.props;
 
-
+const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
 ---
 
 <!doctype html>
@@ -33,25 +34,25 @@ const { title, type = "blog" } = Astro.props;
 			<div class="menu-utilities-container">
 				<ul id="menu-utilities" class="menu">
 					<li id="menu-item-6508" class="active menu-item menu-item-type-custom menu-item-object-custom menu-item-6508">
-						<a href="http://cirkl.zone">CIRKL.zone</a>
+						<a href={`http://${import.meta.env.PUBLIC_WEBSITE_URL}`}>{adjustDisplayDates ? "ROBLOX.com" : formatWebsiteDomain(import.meta.env.PUBLIC_WEBSITE_URL)}</a>
 					</li>
 					<li id="menu-item-7056" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-7056">
 						<a href="/">Blog</a>
 					</li>
 					<li id="menu-item-6648" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6648">
-						<a href="http://corp.cirkl.zone/">About Us</a>
+						<a href={`http://corp.${import.meta.env.PUBLIC_WEBSITE_URL}/`}>About Us</a>
 					</li>
 					<li id="menu-item-6649" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6649">
-						<a href="http://corp.cirkl.zone/leadership">Leadership</a>
+						<a href={`http://corp.${import.meta.env.PUBLIC_WEBSITE_URL}/leadership`}>Leadership</a>
 					</li>
 					<li id="menu-item-6650" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6650">
-						<a href="http://corp.cirkl.zone/jobs">Jobs</a>
+						<a href={`http://corp.${import.meta.env.PUBLIC_WEBSITE_URL}/jobs`}>Jobs</a>
 					</li>
 					<li id="menu-item-6509" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6509">
-						<a href="http://corp.cirkl.zone/roblox-press">Press</a>
+						<a href={`http://corp.${import.meta.env.PUBLIC_WEBSITE_URL}/roblox-press`}>Press</a>
 					</li>
 					<li id="menu-item-7055" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7055">
-						<a href="http://corp.cirkl.zone/contact-us">Contact</a>
+						<a href={`http://corp.${import.meta.env.PUBLIC_WEBSITE_URL}/contact-us`}>Contact</a>
 					</li>
 				</ul>
 			</div>

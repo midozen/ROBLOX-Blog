@@ -1,22 +1,108 @@
-<footer id="colophon" role="contentinfo">
-    <div id="site-generator">
-        <div id="supplementary" class="one">
-        <div id="first" class="widget-area" role="complementary">
-        <aside id="nav_menu-3" class="widget widget_nav_menu">
-            <div class="menu-footer-container">
-                <ul id="menu-footer" class="menu">
-                    <li id="menu-item-6510" class="active menu-item menu-item-type-custom menu-item-object-custom menu-item-6510"><a href="http://www.cirkl.zone/">CIRKL.zone</a></li>
-                    <li id="menu-item-6511" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6511"><a href="http://corp.cirkl.zone/contact-us">Contact Us</a></li>
-                    <li id="menu-item-6513" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6513"><a href="/wp-login">Log In</a></li>
-                    <li id="menu-item-7051" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7051"><a href="/site-archives/">Blog Archives</a></li>
-                </ul>
-            </div>
-        </aside>
-    </div>
+---
+import { formatWebsiteDomain } from "@utils/general";
 
+const { user } = Astro.locals;
+
+const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
+---
+
+<footer id="colophon" role="contentinfo">
+  <div id="site-generator">
+    <div id="supplementary" class="one">
+      <div id="first" class="widget-area" role="complementary">
+        <aside id="nav_menu-3" class="widget widget_nav_menu">
+          <div class="menu-footer-container">
+            <ul id="menu-footer" class="menu">
+              <li
+                id="menu-item-6510"
+                class="active menu-item menu-item-type-custom menu-item-object-custom menu-item-6510"
+              >
+                <a href={`http://www.${import.meta.env.PUBLIC_WEBSITE_URL}/`}>{adjustDisplayDates ? "ROBLOX.com" : formatWebsiteDomain(import.meta.env.PUBLIC_WEBSITE_URL)}</a>
+              </li>
+              <li
+                id="menu-item-6511"
+                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6511"
+              >
+                <a href={`http://corp.${import.meta.env.PUBLIC_WEBSITE_URL}/contact-us`}>Contact Us</a>
+              </li>
+              {
+                user ? (
+                  <li
+                    id="menu-item-6513"
+                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6513"
+                  >
+                    <a href="/api/logout">Log Out</a>
+                  </li>
+                ) : (
+                  <li
+                    id="menu-item-6513"
+                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6513"
+                  >
+                    <a href="/wp-login">Log In</a>
+                  </li>
+                )
+              }
+              <li
+                id="menu-item-7051"
+                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7051"
+              >
+                <a href="/site-archives/">Blog Archives</a>
+              </li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+
+      <div>
+        <input type="checkbox" name="larp-mode" id="larp-mode" />
+        <label for="larp-mode">Adjust Display Dates</label>
+        <script is:inline>
+          $(document).ready(function () {
+            // Check the cookie to see if LARP mode is enabled
+            let larpModeEnabled = getCookie("larp-mode") === "true";
+
+            $("#larp-mode").attr("checked", larpModeEnabled);
+
+            // Listen for click events on the #larp-mode checkbox
+            $("#larp-mode").click(function () {
+              let isChecked = $(this).is(":checked");
+
+              // Save the state to a cookie
+              setCookie("larp-mode", isChecked, 30); // Expires in 7 days
+              window.location.reload();
+            });
+
+            // Function to set a cookie
+            function setCookie(name, value, days) {
+              let date = new Date();
+              date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+              let expires = "expires=" + date.toUTCString();
+              document.cookie = name + "=" + value + ";" + expires + ";path=/";
+            }
+
+            // Function to get a cookie
+            function getCookie(name) {
+              let nameEQ = name + "=";
+              let ca = document.cookie.split(";");
+              for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(nameEQ) === 0) {
+                  return c.substring(nameEQ.length, c.length);
+                }
+              }
+              return null;
+            }
+          });
+        </script>
+      </div>
     </div>
-        Roblox Community Blog is powered by 
-        <a href="https://github.com/midozen" title="Semantic Personal Publishing Platform" rel="generator">midozen</a> and a thousand networked Amigas. 
-        All rights reserved {new Date().getFullYear()}.
-    </div>
+    Roblox Community Blog is powered by
+    <a
+      href="https://github.com/midozen"
+      title="Such a cool person and he made this cool website"
+      rel="generator">midozen</a
+    > and a thousand networked Amigas. All rights reserved {
+      (new Date().getFullYear() - (adjustDisplayDates ? 13 : 0))
+    }.
+  </div>
 </footer>

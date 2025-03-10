@@ -3,7 +3,7 @@ import Layout from "@layouts/Layout.astro";
 
 import CollapsedPost from "@components/Post/CollapsedPost.astro";
 
-import { prisma, getRSSFeed } from "@utils/prisma";
+import { prisma, getRSSFeed, postInclude } from "@utils/prisma";
 import Pagination from "@components/Pagination.astro";
 
 // How much posts to query per page
@@ -49,12 +49,7 @@ const queryConditions = {
 };
 
 const posts = await prisma.post.findMany({
-  include: {
-    categories: true,
-    author: {
-      select: { username: true }
-    }
-  },
+  include: postInclude,
   where: queryConditions,
   skip,
   take: POSTS_PER_PAGE,
