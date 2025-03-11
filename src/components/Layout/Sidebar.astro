@@ -8,7 +8,7 @@ const categories = await prisma.category.findMany();
 
 const posts = await prisma.post.findMany({
   select: { title: true, slug: true, dateCreated: true },
-  orderBy: { dateCreated: "asc" },
+  orderBy: { dateCreated: "desc" },
   take: 5
 });
 

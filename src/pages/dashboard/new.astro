@@ -18,5 +18,5 @@ if (errorMessage) Astro.cookies.delete("error");
   <h2 class="page-title">Create a new post</h2><br />
 
   {errorMessage && <small style="color: red;">{errorMessage.value}</small>}
-  <PostEditor client:load username={user.username} categories={categories} />
+  <PostEditor client:load user={user} categories={categories} />
 </Layout>

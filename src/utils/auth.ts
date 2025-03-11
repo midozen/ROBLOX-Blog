@@ -48,7 +48,7 @@ export const getUserFromSession = async (token: string | undefined): Promise<Use
     where: { token },
     select: {
       User: {
-        select: { id: true, username: true }
+        select: { id: true, username: true, pfp: true, bio: true },
       }
     },
   });

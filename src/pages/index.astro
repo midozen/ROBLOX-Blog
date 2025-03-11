@@ -33,11 +33,14 @@ const skip = (pageNumber - 1) * POSTS_PER_PAGE;
 // Construct dynamic query conditions
 const queryConditions = {
   // TODO: Fix month filtering
-  ...(month && {
-    dateCreated: {
-      gte: new Date(`${month.slice(0, 4)}-${month.slice(4)}`)
-    }
-  }),
+  ...(month && (() => {
+    const year = month.slice(0, 4);
+    const monthPart = month.slice(4);
+    const startDate = new Date(`${year}-${monthPart}-01`);
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + 1);
+    return { dateCreated: { gte: startDate, lt: endDate } };
+  })()),
   ...(category && {
     categories: {
       some: {id: Number(category)}

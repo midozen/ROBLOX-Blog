@@ -1,7 +1,8 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import PostEditor from "@components/Editors/PostEditor.svelte";
-import { prisma } from "@utils/prisma";
+import { postInclude, prisma } from "@utils/prisma";
+import type { Post } from "@utils/types";
 
 const { user } = Astro.locals;
 
@@ -12,12 +13,8 @@ if (isNaN(postID)) return new Response(null, { status: 404 });
 
 const post = await prisma.post.findFirst({
   where: { id: postID },
-  select: {
-    title: true,
-    content: true,
-    categories: true
-  },
-});
+  include: postInclude
+}) as Post;
 
 if (!post) return new Response(null, { status: 404 });
 
@@ -35,11 +32,8 @@ if (errorMessage) Astro.cookies.delete("error");
   {errorMessage && <small style="color: red;">{errorMessage.value}</small>}
   <PostEditor
     client:load
-    username={user.username}
-    postId={postID}
-    title={post.title}
-    content={post.content}
+    user={user}
     categories={categories}
-    existingCategories={post.categories}
+    post={post}
   />
 </Layout>

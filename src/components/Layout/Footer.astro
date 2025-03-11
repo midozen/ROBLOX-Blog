@@ -100,7 +100,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
     <a
       href="https://github.com/midozen"
       title="Such a cool person and he made this cool website"
-      rel="generator">midozen</a
+      rel="generator">{adjustDisplayDates ? "WordPress" : "midozen"}</a
     > and a thousand networked Amigas. All rights reserved {
       (new Date().getFullYear() - (adjustDisplayDates ? 13 : 0))
     }.

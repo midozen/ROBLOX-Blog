@@ -1,17 +1,24 @@
 <script lang="ts">
   import { formatDate, getPostLink } from "@utils/general";
+  import type { Post, User } from "@utils/types";
   import { marked } from "marked";
 
-  // All the external variables so we can make this multi-purpose
-  export let postId: number | null = null;
-  export let title: string = "New Blog Post";
-  export let content: string = "";
-  export let username: string; // Just for preview purposes
+  export let user: User;
   export let categories: Array<{ id: number; categoryName: string }>;
-  export let existingCategories: Array<{ id: number; categoryName: string }>; // Dude I don't even know anymore
+
+  export let post: Post = {
+    id: -1,
+    title: "New Blog Post",
+    content: "",
+    author: user,
+    categories: [],
+    authorId: 1,
+    dateCreated: new Date(),
+    slug: "",
+  };
 
   let isPreviewMode = false;
-  $: formAction = `/api/post/${postId ? "edit" : "new"}`;
+  $: formAction = `/api/post/${(post.id !== -1) ? "edit" : "new"}`;
 </script>
 
 <form
@@ -19,8 +26,8 @@
   method="POST"
   action={formAction}
 >
-  {#if postId}
-    <input type="hidden" name="postID" value={postId} />
+  {#if post.id !== -1}
+    <input type="hidden" name="postID" value={post.id} />
   {/if}
 
   <label>
@@ -37,14 +44,14 @@
         type="text"
         name="title"
         id="title"
-        bind:value={title}
+        bind:value={post.title}
         placeholder="Title"
         required
       />
       <br />
 
       <textarea
-        bind:value={content}
+        bind:value={post.content}
         name="content"
         style="min-width: 468px; max-width: 468px; height: 500px;"
         placeholder="Write your post content here..."
@@ -62,7 +69,7 @@
               id={`category${id}`}
               name={`category${id}`}
               value={id}
-              checked={existingCategories?.some(function(o) {return o["id"] === id}) ?? false}
+              checked={post.categories?.some(function(o) {return o["id"] === id}) ?? false}
             />
             {categoryName}
           </label><br />
@@ -78,54 +85,48 @@
       <header class="entry-header">
         <h1 class="entry-title">
           <a 
-            href="#"
-            title={title}
+            href={`#`}
+            title={post.title}
             rel="bookmark"
             >
-            {title}
+            {post.title}
           </a>
         </h1>
         <div class="entry-meta">
           <span class="by-author">
             <span class="sep"> By </span> 
             <span class="author vcard">
-              <a class="url fn n" href={`/author/${username}/`} title={`View all posts by ${username}`} rel="author">{username}</a>
+              <a class="url fn n" href={`#`} title={`View all posts by ${post.author.username}`} rel="author">{post.author.username}</a>
             </span>
           </span> - 
           <time class="entry-date" datetime={new Date().toISOString()}>{formatDate(new Date())}</time>
         </div>
       </header>
       <div class="entry-content">
-        {@html marked(content)}
+        {@html marked(post.content!)}
       </div>
     
       <footer class="entry-meta">
           This entry was posted in
-          <!-- <Fragment
-            set:html={post.categories
-              .map((category: any) => {
-                return `<a href="/category/${category.categoryName}" title="View all posts in ${category.categoryName}" rel="category tag">${category.categoryName}</a>`;
-              })
-              .join(", ") || "<i>No Categories</i>"}
-          /> -->
+          <i>No Categories</i>
           by
-          <a href={`/author/${username}/`}>{username}</a>
+          <a href={`#`}>{post.author.username}</a>
           . Bookmark the
-          <a href="#"
-            title={title}
+          <a href={`#`}
+            title={post.title}
             rel="bookmark"
             >permalink</a>.
     
           <div id="author-info">
             <div id="author-avatar">
-              <img alt="" src={`${import.meta.env.PUBLIC_CDN_URL}/images/pfp/default.png`} class="avatar avatar-68 photo" width="68" height="68">
+              <img alt="" src={`${import.meta.env.PUBLIC_CDN_URL}/images/pfp/${user.pfp}`} class="avatar photo" width="68" height="68">
             </div>
             <div id="author-description">
-              <h2>About {username}</h2>
-              {"Blog Poster"}
+              <h2>About {post.author.username}</h2>
+              {post.author.bio}
               <div id="author-link">
-                <a href={`/author/${username}/`} rel="author">
-                  View all posts by {username} <span class="meta-nav">→</span></a>
+                <a href={`#`} rel="author">
+                  View all posts by {post.author.username} <span class="meta-nav">→</span></a>
               </div>
             </div>
           </div>
@@ -139,7 +140,7 @@
 
   {#if !isPreviewMode}
     <button type="submit">
-      {postId ? 'Update' : 'Create'} Post
+      {post.id ? 'Update' : 'Create'} Post
     </button>
   {/if}
 </form>

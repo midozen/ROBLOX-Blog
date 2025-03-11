@@ -25,13 +25,13 @@ export function formatDate(date: Date, accurateDates: Boolean = false): string {
   return `${month} ${day}${daySuffix}, ${year}`;
 }
 
-export function formatWebsiteDomain(domain: string, accurateDates: Boolean = false) {
+export function formatWebsiteDomain(domain: string) {
   const parts = domain.split(".");
 
   return parts[0].toUpperCase() + "." + parts[1];
 }
 
-export function generateMonthYears(startDate?: Date): Array<{ num: string; formatted: string; }> {
+export function generateMonthYears(startDate?: Date, accurateDates: Boolean = false): Array<{ num: string; formatted: string; }> {
   const monthYears: Array<{ num: string; formatted: string; }> = [];
 
   const start = new Date(startDate ?? new Date());
@@ -41,23 +41,32 @@ export function generateMonthYears(startDate?: Date): Array<{ num: string; forma
   current.setDate(1);
 
   while (
-    start.getFullYear() < current.getFullYear() ||
-    (start.getFullYear() === current.getFullYear() &&
-      start.getMonth() <= current.getMonth()) // I don't fucking know anymore dude I just wanna sleep
+    current.getFullYear() > start.getFullYear() ||
+    (current.getFullYear() === start.getFullYear() &&
+      current.getMonth() >= start.getMonth())
   ) {
-    const year = start.getFullYear();
-    const month = start.getMonth() + 1;
+    let year = current.getFullYear();
+    const month = current.getMonth() + 1;
+
+    let formattedYear = year;
+    if (accurateDates) {
+      if (year < 2025 || (year === 2025 && (current.getMonth() < 1 || (current.getMonth() === 1 && current.getDate() < 28)))) {
+        formattedYear -= 14;
+      } else {
+        formattedYear -= 13;
+      }
+    }
 
     monthYears.push({
       num: `${year}${month.toString().padStart(2, "0")}`,
-      formatted: start.toLocaleString("default", {
+      formatted: current.toLocaleString("default", {
         month: "long",
         year: "numeric",
-      }),
+      }).replace(year.toString(), formattedYear.toString()),
     });
 
     // Create a new date to avoid mutation
-    start.setMonth(start.getMonth() + 1);
+    current.setMonth(current.getMonth() - 1);
   }
 
   return monthYears;
