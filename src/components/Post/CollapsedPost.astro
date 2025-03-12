@@ -11,7 +11,8 @@ interface Props {
 const { post } = Astro.props;
 const { user } = Astro.locals;
 
-const content = marked.parse(post.content?.slice(0, 256) ?? "Nothing.");
+const content = marked(post.content?.slice(0, 256) ?? "Nothing.");
+const shouldShowReadMore = post.content!.length > 256;
 
 const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
 ---
@@ -57,6 +58,9 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
   </header>
   <div class="entry-content">
     <Fragment set:html={content} />
+    {shouldShowReadMore && (
+      <a href={getPostLink(post, adjustDisplayDates)} class="more-link">Continue reading <span class="meta-nav">→</span></a>
+    )}
   </div>
 
   <footer class="entry-meta">

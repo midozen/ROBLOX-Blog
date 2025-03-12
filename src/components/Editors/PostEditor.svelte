@@ -9,12 +9,12 @@
   export let post: Post = {
     id: -1,
     title: "New Blog Post",
+    slug: "",
     content: "",
     author: user,
+    authorId: user.id,
     categories: [],
-    authorId: 1,
     dateCreated: new Date(),
-    slug: "",
   };
 
   let isPreviewMode = false;
