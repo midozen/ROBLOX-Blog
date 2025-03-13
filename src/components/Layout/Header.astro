@@ -6,7 +6,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
 
 <header id="branding" role="banner">
     <a href="/">
-        <img src="/images/header_04.png" alt="" width="900" height="108">
+        <img src={adjustDisplayDates ? "/images/header_04.png" : "/images/header_05.png"} alt="" width="900" height="108">
     </a>
 
     <hgroup>
