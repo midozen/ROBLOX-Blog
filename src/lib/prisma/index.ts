@@ -79,10 +79,3 @@ export async function getRSSFeed(): Promise<Response> {
     });
   }
 }
-
-export const postInclude = {
-  categories: true,
-  author: {
-    select: { username: true, pfp: true, bio: true },
-  },
-} as const;

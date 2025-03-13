@@ -1,10 +1,11 @@
 ---
 import Layout from "@layouts/Layout.astro";
 
-import CollapsedPost from "@components/Post/CollapsedPost.astro";
+import { prisma, getRSSFeed } from "@lib/prisma";
+import { postWithAuthorAndCategories } from "@lib/prisma/queries";
 
-import { prisma, getRSSFeed, postInclude } from "@utils/prisma";
-import Pagination from "@components/Pagination.astro";
+import PostPreview from "@components/Post/PostPreview.astro";
+import Pagination from "@components/Common/Pagination.astro";
 
 // How much posts to query per page
 const POSTS_PER_PAGE = 5;
@@ -52,7 +53,7 @@ const queryConditions = {
 };
 
 const posts = await prisma.post.findMany({
-  include: postInclude,
+  include: postWithAuthorAndCategories,
   where: queryConditions,
   skip,
   take: POSTS_PER_PAGE,
@@ -69,7 +70,7 @@ const posts = await prisma.post.findMany({
 	  <p>No results matched your query.</p>
   )}
 
-  {posts.map((post) => <CollapsedPost post={post} />)}
+  {posts.map((post) => <PostPreview post={post} />)}
 
   <Pagination pageNumber={pageNumber} maxPageCount={maxPageCount} />
 </Layout>

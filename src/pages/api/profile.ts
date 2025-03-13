@@ -1,11 +1,11 @@
-import { getUserFromSession, loginUser } from "@utils/auth";
-import { prisma } from "@utils/prisma";
-import { deleteProfilePicture, uploadProfilePicture } from "@utils/r2";
+import { validateSession } from "@lib/auth/session";
+import { prisma } from "@lib/prisma";
+import { deleteProfilePicture, uploadProfilePicture } from "@lib/r2";
 import type { APIContext } from "astro";
 
 export async function POST({ request, cookies, redirect }: APIContext) {
   try {
-    const user = await getUserFromSession(cookies.get("wp-auth-session")?.value);
+    const user = await validateSession(cookies.get("wp-auth-session")?.value);
 
     const formData = await request.formData();
     const profilePicture = formData.get("profilePicture") as File | null;

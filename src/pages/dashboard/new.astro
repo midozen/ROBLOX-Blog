@@ -1,7 +1,9 @@
 ---
 import Layout from "@layouts/Layout.astro";
+
 import PostEditor from "@components/Editors/PostEditor.svelte";
-import { prisma } from "@utils/prisma";
+
+import { prisma } from "@lib/prisma";
 
 const { user } = Astro.locals;
 

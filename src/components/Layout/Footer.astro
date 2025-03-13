@@ -1,5 +1,5 @@
 ---
-import { formatWebsiteDomain } from "@utils/general";
+import { capitalizeDomainPrefix } from "@utils/url";
 
 const { user } = Astro.locals;
 
@@ -17,7 +17,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
                 id="menu-item-6510"
                 class="active menu-item menu-item-type-custom menu-item-object-custom menu-item-6510"
               >
-                <a href={`http://www.${import.meta.env.PUBLIC_WEBSITE_URL}/`}>{adjustDisplayDates ? "ROBLOX.com" : formatWebsiteDomain(import.meta.env.PUBLIC_WEBSITE_URL)}</a>
+                <a href={`http://www.${import.meta.env.PUBLIC_WEBSITE_URL}/`}>{adjustDisplayDates ? "ROBLOX.com" : capitalizeDomainPrefix(import.meta.env.PUBLIC_WEBSITE_URL)}</a>
               </li>
               <li
                 id="menu-item-6511"

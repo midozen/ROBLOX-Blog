@@ -1,11 +1,13 @@
 ---
 import { marked } from "marked";
-import { formatDate, getPostLink } from "@utils/general";
 
-import Author from "@components/Author.astro";
+import Author from "@components/Common/Author.astro";
 
-import type { Post } from "@utils/types";
-import { markedUse } from "@utils/parser";
+import type { Post } from "@utils/types/post";
+
+import { formatDateWithOrdinal } from "@utils/date";
+import { globalMarkedExtensions } from "@utils/index";
+import { getPostUrl } from "@utils/url";
 
 interface Props {
   post: Post;
@@ -14,7 +16,7 @@ interface Props {
 const { post } = Astro.props;
 const { user } = Astro.locals;
 
-marked.use(markedUse)
+marked.use(globalMarkedExtensions);
 const content = marked.parse(post.content ?? "Nothing.");
 
 const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
@@ -24,7 +26,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
   <header class="entry-header">
     <h1 class="entry-title">
       <a 
-        href={getPostLink(post, adjustDisplayDates)}
+        href={getPostUrl(post, adjustDisplayDates)}
         title={post.title}
         rel="bookmark"
         >
@@ -38,7 +40,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
           <a class="url fn n" href={`/author/${post.author.username}/`} title={`View all posts by ${post.author.username}`} rel="author">{post.author.username}</a>
         </span>
       </span> - 
-      <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDate(post.dateCreated, adjustDisplayDates)}</time>
+      <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDateWithOrdinal(post.dateCreated, adjustDisplayDates)}</time>
       {user && (
         <span>
           - 
@@ -72,7 +74,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
       by
       <a href={`/author/${post.author.username}/`}>{post.author.username}</a>
       . Bookmark the
-      <a href={getPostLink(post, adjustDisplayDates)}
+      <a href={getPostUrl(post, adjustDisplayDates)}
         title={post.title}
         rel="bookmark"
         >permalink</a>.

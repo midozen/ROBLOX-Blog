@@ -1,5 +1,5 @@
 ---
-import { formatWebsiteDomain } from "@utils/general";
+import { capitalizeDomainPrefix } from "@utils/url";
 
 const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
 ---
@@ -13,6 +13,6 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
         <h1 id="site-title">
             <span><a href="/" title="Roblox Blog" rel="home">Roblox Blog</a></span>
         </h1>
-        <h2 id="site-description">Free Games at {adjustDisplayDates ? "ROBLOX.com" : formatWebsiteDomain(import.meta.env.PUBLIC_WEBSITE_URL)}</h2>
+        <h2 id="site-description">Free Games at {adjustDisplayDates ? "ROBLOX.com" : capitalizeDomainPrefix(import.meta.env.PUBLIC_WEBSITE_URL)}</h2>
     </hgroup>
 </header>

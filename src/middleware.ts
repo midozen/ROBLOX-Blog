@@ -1,16 +1,16 @@
-import type { User } from "@utils/types";
+import type { User } from "@utils/types/user";
 import type { APIContext, MiddlewareNext } from "astro";
 
-import { getUserFromSession } from "@utils/auth";
+import { validateSession } from "@lib/auth/session";
 
 const PROTECTED_ROUTES = ["/dashboard/*", "/dashboard"];
 const UNAUTHORIZED_ROUTES = ["/wp-login"];
 
-async function setLocalsUser(session?: string): Promise<User | null> {
+async function setUserLocals(session?: string): Promise<User | null> {
   if (!session) return null;
 
   try {
-    return await getUserFromSession(session);
+    return await validateSession(session);
   } catch (error) {
     console.error("Error setting user:", error);
     return null;
@@ -34,7 +34,7 @@ function isProtectedRoute(pathname: string): boolean {
     next: MiddlewareNext
   ) {
     const sessionCookie = cookies.get("wp-auth-session")?.value;
-    locals.user = await setLocalsUser(sessionCookie);
+    locals.user = await setUserLocals(sessionCookie);
 
     if (sessionCookie && locals.user == null)
       cookies.delete("wp-auth-session")

@@ -2,9 +2,11 @@
 import { marked } from "marked";
 import { JSDOM } from "jsdom";
 
-import { formatDate, getPostLink } from "@utils/general";
-import type { Post } from "@utils/types";
-import { markedUse } from "@utils/parser";
+import { formatDateWithOrdinal } from "@utils/date";
+import { globalMarkedExtensions } from "@utils/index";
+import { getPostUrl } from "@utils/url";
+
+import type { Post } from "@utils/types/post";
 
 interface Props {
   post: Post;
@@ -13,7 +15,7 @@ interface Props {
 const { post } = Astro.props;
 const { user } = Astro.locals;
 
-marked.use(markedUse)
+marked.use(globalMarkedExtensions);
 
 async function parsePreviewContent(postContent: string, maxLength: number = 2) {
   const dom = new JSDOM(await marked(postContent));
@@ -33,7 +35,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
   <header class="entry-header">
     <h1 class="entry-title">
       <a 
-        href={getPostLink(post, adjustDisplayDates)}
+        href={getPostUrl(post, adjustDisplayDates)}
         title={post.title}
         rel="bookmark"
         >
@@ -47,7 +49,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
           <a class="url fn n" href={`/author/${post.author.username}/`} title={`View all posts by ${post.author.username}`} rel="author">{post.author.username}</a>
         </span>
       </span> - 
-      <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDate(post.dateCreated, adjustDisplayDates)}</time>
+      <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDateWithOrdinal(post.dateCreated, adjustDisplayDates)}</time>
       {user && (
           <span>
             - 
@@ -65,13 +67,13 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
       )}
     </div>
     <div class="comments-link">
-      <a href={`${getPostLink(post, adjustDisplayDates)}/#comments`} title={`Comment on ${post.title}`}></a>
+      <a href={`${getPostUrl(post, adjustDisplayDates)}/#comments`} title={`Comment on ${post.title}`}></a>
     </div>
   </header>
   <div class="entry-content">
     <Fragment set:html={content} />
     {shouldShowReadMore && (
-      <a href={getPostLink(post, adjustDisplayDates)} class="more-link">Continue reading <span class="meta-nav">→</span></a>
+      <a href={getPostUrl(post, adjustDisplayDates)} class="more-link">Continue reading <span class="meta-nav">→</span></a>
     )}
   </div>
 
@@ -87,6 +89,6 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
       />
     </span>
     <span class="sep"> | </span>
-    <span class="comments-link"><a href={`${getPostLink(post, adjustDisplayDates)}/#comments`} title={`Comment on ${post.title}`}><span class="leave-reply">Leave a reply</span></a></span>
+    <span class="comments-link"><a href={`${getPostUrl(post, adjustDisplayDates)}/#comments`} title={`Comment on ${post.title}`}><span class="leave-reply">Leave a reply</span></a></span>
   </footer>
 </article>

@@ -1,6 +1,6 @@
 ---
-import { getPostLink } from "@utils/general";
-import { prisma } from "@utils/prisma";
+import { getPostUrl } from "@utils/url";
+import { prisma } from "@lib/prisma";
 
 const { user } = Astro.locals;
 
@@ -19,24 +19,6 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
   <aside id="text-6" class="widget widget_text">
     <div class="textwidget">
       <ul id="sidebarLinks">
-        <!-- <li id="sidebarLinkFacebook">
-          <a
-            href="http://facebook.com/roblox"
-            >Facebook</a
-          >
-        </li>
-        <li id="sidebarLinkYoutube">
-          <a
-            href="http://www.youtube.com/user/ROBLOX"
-            >YouTube Channel</a
-          >
-        </li>
-        <li id="sidebarLinkTwitter">
-          <a
-            href="http://twitter.com/ROBLOX"
-            >Twitter</a
-          >
-        </li> -->
         <li id="sidebarLinkRss">
           <a href="/?feed=rss">RSS</a>
         </li>
@@ -63,7 +45,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
       {posts.map((post) => (
         <li>
           <a 
-            href={getPostLink(post, adjustDisplayDates)} 
+            href={getPostUrl(post, adjustDisplayDates)} 
             title={post.title}>
             {post.title}
           </a>

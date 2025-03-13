@@ -1,5 +1,5 @@
-import { getUserFromSession, loginUser } from "@utils/auth";
-import { prisma } from "@utils/prisma";
+import { getUserFromSession, loginUser } from "src/lib/auth/auth";
+import { prisma } from "@lib/prisma";
 import type { APIContext } from "astro";
 
 import type { Category } from "@prisma/client";

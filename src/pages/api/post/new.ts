@@ -1,6 +1,8 @@
-import { getUserFromSession } from "@utils/auth";
-import { getPostLink } from "@utils/general";
-import { prisma } from "@utils/prisma";
+import { validateSession } from "@lib/auth/session";
+import { prisma } from "@lib/prisma";
+
+import { getPostUrl } from "@utils/url";
+
 import type { APIContext } from "astro";
 
 interface PostData {
@@ -34,7 +36,7 @@ function validatePostData(data: FormData): PostData {
 
 export async function POST({ request, cookies, redirect }: APIContext) {
     try {
-        const user = await getUserFromSession(cookies.get("wp-auth-session")?.value);
+        const user = await validateSession(cookies.get("wp-auth-session")?.value);
 
         const formData = await request.formData();
         const { title, content, categories } = validatePostData(formData);
@@ -49,7 +51,7 @@ export async function POST({ request, cookies, redirect }: APIContext) {
             }
         })
 
-        return redirect(getPostLink(post));
+        return redirect(getPostUrl(post));
     } catch (error) {
         const errorMessage =
             error instanceof Error ? error.message : "An unknown error occurred";

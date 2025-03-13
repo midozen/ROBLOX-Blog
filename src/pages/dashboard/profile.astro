@@ -1,8 +1,8 @@
 ---
-import { prisma } from "@utils/prisma";
+import { prisma } from "@lib/prisma";
 
 import Layout from "@layouts/Layout.astro";
-import Author from "@components/Author.astro";
+import Author from "@components/Common/Author.astro";
 
 const { user } = Astro.locals;
 
@@ -11,6 +11,8 @@ const userData = await prisma.user.findUnique({
     id: user.id,
   },
 });
+
+if (!userData) return new Response(null, { status: 404 });
 ---
 
 <Layout title="Roblox Blog">

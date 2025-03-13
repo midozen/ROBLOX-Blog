@@ -1,13 +1,11 @@
-import type { MarkedExtension } from "marked";
+import type { ParsedImageResult } from "@utils/types/parser";
 
-interface ParsedImageResult {
-  altText: string;
-  align?: "right" | "left" | "none";
-  width?: number;
-}
-
-function parseImageOptions(text: string): ParsedImageResult {
-  const result: ParsedImageResult = { altText: text, align: "none", width: 300 };
+export function parseImageMarkdownAttributes(text: string): ParsedImageResult {
+  const result: ParsedImageResult = {
+    altText: text,
+    align: "none",
+    width: 300,
+  };
 
   const regex = /"([^"]+)"\s*(\{([^}]+)\})?/;
   const match = text.match(regex);
@@ -37,12 +35,3 @@ function parseImageOptions(text: string): ParsedImageResult {
 
   return result;
 }
-
-export const markedUse: MarkedExtension = {
-  renderer: {
-    image(token): string {
-        const { altText, align, width } = parseImageOptions(token.text);
-        return `<img src="${token.href}" alt="${altText}" class="wp-image-0 align${align}" width="${width}"/>`;
-    }
-  },
-};

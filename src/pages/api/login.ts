@@ -1,4 +1,5 @@
-import { loginUser } from "@utils/auth";
+import { authenticateUser } from "@lib/auth/session";
+
 import type { APIContext } from "astro";
 
 interface RegisterData {
@@ -26,7 +27,7 @@ export async function POST({ request, cookies, redirect }: APIContext) {
     const formData = await request.formData();
     const { username, password } = validateRegisterData(formData);
 
-    const token = await loginUser(username, password);
+    const token = await authenticateUser(username, password);
     if (!token) {
       throw new Error("Invalid username or password");
     }

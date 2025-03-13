@@ -1,8 +1,12 @@
 ---
 import Layout from "@layouts/Layout.astro";
+
 import PostEditor from "@components/Editors/PostEditor.svelte";
-import { postInclude, prisma } from "@utils/prisma";
-import type { Post } from "@utils/types";
+
+import { prisma } from "@lib/prisma";
+import { postWithAuthorAndCategories } from "@lib/prisma/queries";
+
+import type { Post } from "@utils/types/post";
 
 const { user } = Astro.locals;
 
@@ -13,7 +17,7 @@ if (isNaN(postID)) return new Response(null, { status: 404 });
 
 const post = await prisma.post.findFirst({
   where: { id: postID },
-  include: postInclude
+  include: postWithAuthorAndCategories
 }) as Post;
 
 if (!post) return new Response(null, { status: 404 });

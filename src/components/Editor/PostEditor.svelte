@@ -1,8 +1,11 @@
 <script lang="ts">
-  import { formatDate, getPostLink } from "@utils/general";
-  import { markedUse } from "@utils/parser";
-  import type { Post, User } from "@utils/types";
   import { marked } from "marked";
+
+  import { formatDateWithOrdinal } from "@utils/date";
+  import { globalMarkedExtensions } from "@utils/index";
+
+  import type { Post } from "@utils/types/post";
+  import type { User } from "@utils/types/user";
 
   export let user: User;
   export let categories: Array<{ id: number; categoryName: string }>;
@@ -21,7 +24,7 @@
   let isPreviewMode = false;
   $: formAction = `/api/post/${(post.id !== -1) ? "edit" : "new"}`;
 
-  marked.use(markedUse);
+  marked.use(globalMarkedExtensions);
 </script>
 
 <form
@@ -102,7 +105,7 @@
               <a class="url fn n" href={`#`} title={`View all posts by ${post.author.username}`} rel="author">{post.author.username}</a>
             </span>
           </span> - 
-          <time class="entry-date" datetime={new Date().toISOString()}>{formatDate(new Date())}</time>
+          <time class="entry-date" datetime={new Date().toISOString()}>{formatDateWithOrdinal(new Date())}</time>
         </div>
       </header>
       <div class="entry-content">
