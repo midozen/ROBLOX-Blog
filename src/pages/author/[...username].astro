@@ -7,7 +7,7 @@ import CollapsedPost from "@components/Post/CollapsedPost.astro";
 import { postInclude, prisma } from "@utils/prisma";
 import Pagination from "@components/Pagination.astro";
 
-const POSTS_PER_PAGE = 8;
+const POSTS_PER_PAGE = 5;
 
 const { username } = Astro.params;
 const pageNumber = Math.max(

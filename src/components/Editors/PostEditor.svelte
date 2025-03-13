@@ -1,5 +1,6 @@
 <script lang="ts">
   import { formatDate, getPostLink } from "@utils/general";
+  import { markedUse } from "@utils/parser";
   import type { Post, User } from "@utils/types";
   import { marked } from "marked";
 
@@ -19,6 +20,8 @@
 
   let isPreviewMode = false;
   $: formAction = `/api/post/${(post.id !== -1) ? "edit" : "new"}`;
+
+  marked.use(markedUse);
 </script>
 
 <form

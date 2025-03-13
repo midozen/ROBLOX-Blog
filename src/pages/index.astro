@@ -7,7 +7,7 @@ import { prisma, getRSSFeed, postInclude } from "@utils/prisma";
 import Pagination from "@components/Pagination.astro";
 
 // How much posts to query per page
-const POSTS_PER_PAGE = 8;
+const POSTS_PER_PAGE = 5;
 
 // Extract and validate search paramters
 const pageNumber = Math.max(1, Number(Astro.url.searchParams.get("paged")) || 1);
