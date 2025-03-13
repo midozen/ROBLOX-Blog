@@ -65,7 +65,6 @@
       ></textarea>
     </fieldset>
 
-    <!-- {#if !postId} -->
       <fieldset>
         <legend>Categories:</legend>
         {#each categories as { id, categoryName }}
@@ -81,7 +80,6 @@
           </label><br />
         {/each}
       </fieldset>
-    <!-- {/if} -->
     <br />
   {/if}
 

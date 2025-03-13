@@ -6,7 +6,7 @@
   }
 
   let requesting = false;
-  export let categories: Array<Category>;
+  export let categories: Category[];
 
   let editableCategories: Array<EditableCategory> = categories.map(
     (category) => ({

@@ -1,11 +1,21 @@
 ---
+import { AstroSeo } from "@astrolib/seo";
+
+import type { OpenGraph } from "@astrolib/seo/types";
+
 import Footer from "@components/Layout/Footer.astro";
 import Header from "@components/Layout/Header.astro";
 import Sidebar from "@components/Layout/Sidebar.astro";
 
 import { capitalizeDomainPrefix } from "@utils/url";
 
-const { title = "Roblox Blog", type = "blog" } = Astro.props;
+interface Props {
+	title?: string;
+	type?: string;
+	openGraph?: OpenGraph;
+}
+
+const { title = "Roblox Blog", type = "blog", openGraph } = Astro.props;
 
 const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
 ---
@@ -15,6 +25,8 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
 	<head>
 		<meta charset="UTF-8" />
 		<title>{title}</title>
+
+		<AstroSeo openGraph={openGraph} />
 
 		<link rel="stylesheet" href="/themes/roblox/style.css">
 

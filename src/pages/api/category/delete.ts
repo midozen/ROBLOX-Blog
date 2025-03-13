@@ -1,10 +1,11 @@
-import { getUserFromSession, loginUser } from "src/lib/auth/auth";
+import { validateSession } from "@lib/auth/session";
 import { prisma } from "@lib/prisma";
+
 import type { APIContext } from "astro";
 
 export async function POST({ url, cookies }: APIContext) {
   try {
-    const user = await getUserFromSession(cookies.get("wp-auth-session")?.value);
+    const user = await validateSession(cookies.get("wp-auth-session")?.value);
 
     const id = Number(url.searchParams.get("id"));
 

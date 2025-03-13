@@ -1,4 +1,6 @@
 ---
+import { AstroSeo } from "@astrolib/seo";
+
 import Layout from "@layouts/Layout.astro";
 
 import Post from "@components/Post/Post.astro";
@@ -7,16 +9,16 @@ import { prisma } from "@lib/prisma";
 import { postWithAuthorAndCategories } from "@lib/prisma/queries";
 
 import { getPostUrl } from "@utils/url";
+import { parsePost } from "@utils/parser/opengraph";
 
 const { year, month, slug } = Astro.params;
 
 const post = await prisma.post.findFirst({
   where: { slug },
-  include: postWithAuthorAndCategories
+  include: postWithAuthorAndCategories,
 });
 
-if (!post) 
-  return new Response(null, { status: 404 });
+if (!post) return new Response(null, { status: 404 });
 
 const prevPost = await prisma.post.findFirst({
   where: {
@@ -47,30 +49,45 @@ const nextPost = await prisma.post.findFirst({
     dateCreated: "asc",
   },
 });
+
+const { image, description } = await parsePost(post);
 ---
 
-<Layout title={`${post.title} > Roblox Blog`} type="blog paged">
-  {(prevPost || nextPost) && (
-    <nav id="nav-above">
-      <h3 class="assistive-text">Post navigation</h3>
+<Layout
+  title={`${post.title} > Roblox Blog`}
+  type="blog paged"
+  openGraph={{
+    title: post.title,
+    description,
+    type: "article",
+    images: image ? [image] : undefined,
+    url: getPostUrl(post),
+    site_name: "Roblox Blog",
+  }}
+>
+  {
+    (prevPost || nextPost) && (
+      <nav id="nav-above">
+        <h3 class="assistive-text">Post navigation</h3>
 
-      {prevPost && (
-        <div class="nav-previous">
-          <a href={getPostUrl(prevPost)} rel="prev">
-            <span class="meta-nav">←</span> Older posts
-          </a>
-        </div>
-      )}
+        {prevPost && (
+          <div class="nav-previous">
+            <a href={getPostUrl(prevPost)} rel="prev">
+              <span class="meta-nav">←</span> Older posts
+            </a>
+          </div>
+        )}
 
-      {nextPost && (
-        <div class="nav-next">
-          <a href={getPostUrl(nextPost)} rel="next">
-            Newer posts <span class="meta-nav">→</span>
-          </a>
-        </div>
-      )}
-    </nav>
-  )}
+        {nextPost && (
+          <div class="nav-next">
+            <a href={getPostUrl(nextPost)} rel="next">
+              Newer posts <span class="meta-nav">→</span>
+            </a>
+          </div>
+        )}
+      </nav>
+    )
+  }
 
   <Post post={post} />
 </Layout>
