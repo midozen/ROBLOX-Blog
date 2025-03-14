@@ -46,7 +46,7 @@ export async function uploadAttachment(file: File): Promise<string> {
     const buffer = await file.arrayBuffer();
     const params = {
         Bucket: `${import.meta.env.R2_BUCKET_NAME}`,
-        Key: uuidv4(),
+        Key: `attachments/${uuidv4()}`,
         Body: Buffer.from(buffer),
         ContentType: file.type,
     };

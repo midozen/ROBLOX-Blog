@@ -4,6 +4,9 @@
   import { formatDateWithOrdinal } from "@utils/date";
   import { globalMarkedExtensions } from "@utils/index";
 
+  import PostPreview from "@components/Editor/Post/PostPreview.svelte";
+  import InsertAttachment from "@components/Editor/Post/InsertAttachment.svelte";
+
   import type { Post } from "@utils/types/post";
   import type { User } from "@utils/types/user";
 
@@ -22,6 +25,18 @@
   };
 
   let isPreviewMode = false;
+  let selectedCategories = new Set(post.categories.map(c => c.id));
+
+  function toggleCategory(categoryId: number) {
+    if (selectedCategories.has(categoryId)) {
+      selectedCategories.delete(categoryId);
+    } else {
+      selectedCategories.add(categoryId);
+    }
+    selectedCategories = selectedCategories; // Trigger reactivity
+    post.categories = categories.filter(c => selectedCategories.has(c.id));
+  }
+
   $: formAction = `/api/post/${(post.id !== -1) ? "edit" : "new"}`;
 
   marked.use(globalMarkedExtensions);
@@ -56,6 +71,8 @@
       />
       <br />
 
+      <InsertAttachment bind:content={post.content} />
+
       <textarea
         bind:value={post.content}
         name="content"
@@ -65,81 +82,28 @@
       ></textarea>
     </fieldset>
 
-      <fieldset>
-        <legend>Categories:</legend>
-        {#each categories as { id, categoryName }}
-          <label>
-            <input
-              type="checkbox"
-              id={`category${id}`}
-              name={`category${id}`}
-              value={id}
-              checked={post.categories?.some(function(o) {return o["id"] === id}) ?? false}
-            />
-            {categoryName}
-          </label><br />
-        {/each}
-      </fieldset>
+    <fieldset>
+      <legend>Categories:</legend>
+      {#each categories as { id, categoryName }}
+        <label>
+          <input
+            type="checkbox"
+            id={`category${id}`}
+            name={`category${id}`}
+            value={id}
+            checked={selectedCategories.has(id)}
+            on:change={() => toggleCategory(id)}
+          />
+          {categoryName}
+        </label><br />
+      {/each}
+    </fieldset>
     <br />
   {/if}
 
   <!-- Display Preview -->
   {#if isPreviewMode}
-    <article class={`post type-post status-publish format-standard hentry`}>
-      <header class="entry-header">
-        <h1 class="entry-title">
-          <a 
-            href={`#`}
-            title={post.title}
-            rel="bookmark"
-            >
-            {post.title}
-          </a>
-        </h1>
-        <div class="entry-meta">
-          <span class="by-author">
-            <span class="sep"> By </span> 
-            <span class="author vcard">
-              <a class="url fn n" href={`#`} title={`View all posts by ${post.author.username}`} rel="author">{post.author.username}</a>
-            </span>
-          </span> - 
-          <time class="entry-date" datetime={new Date().toISOString()}>{formatDateWithOrdinal(new Date())}</time>
-        </div>
-      </header>
-      <div class="entry-content">
-        {@html marked(post.content!)}
-      </div>
-    
-      <footer class="entry-meta">
-          This entry was posted in
-          <i>No Categories</i>
-          by
-          <a href={`#`}>{post.author.username}</a>
-          . Bookmark the
-          <a href={`#`}
-            title={post.title}
-            rel="bookmark"
-            >permalink</a>.
-    
-          <div id="author-info">
-            <div id="author-avatar">
-              <img alt="" src={`${import.meta.env.PUBLIC_CDN_URL}/images/pfp/${user.pfp}`} class="avatar photo" width="68" height="68">
-            </div>
-            <div id="author-description">
-              <h2>About {post.author.username}</h2>
-              {post.author.bio}
-              <div id="author-link">
-                <a href={`#`} rel="author">
-                  View all posts by {post.author.username} <span class="meta-nav">→</span></a>
-              </div>
-            </div>
-          </div>
-      </footer>
-    </article>
-    
-    <div id="comments">
-      <p class="nocomments"></p>
-    </div>
+    <PostPreview {post} />
   {/if}
 
   {#if !isPreviewMode}

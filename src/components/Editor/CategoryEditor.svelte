@@ -5,8 +5,9 @@
     unsaved?: boolean;
   }
 
-  let requesting = false;
   export let categories: Category[];
+
+  let makingRequest = false;
 
   let editableCategories: Array<EditableCategory> = categories.map(
     (category) => ({
@@ -19,7 +20,7 @@
     action: "create" | "update" | "delete",
     category: EditableCategory
   ) {
-    requesting = true;
+    makingRequest = true;
     try {
       let endpoint = "";
       let method = "POST";
@@ -48,7 +49,7 @@
         error instanceof Error ? error.message : "An unknown error occurred";
 
       alert(`Error attempting action ${action.toUpperCase()}: ${errorMessage}`);
-      requesting = false;
+      makingRequest = false;
     }
   }
 
@@ -82,30 +83,30 @@
         type="text"
         style={category.unsaved ? "font-style: italic; color: green;" : ""}
         bind:value={category.categoryName}
-        disabled={requesting}
+        disabled={makingRequest}
       />
 
       {#if category.unsaved}
-        <button on:click={() => handleCategoryAction("create", category)} disabled={requesting}>Create</button>
-        <button style="color: red;" on:click={() => discardUnsavedCategory(index)} disabled={requesting}>X</button>
+        <button on:click={() => handleCategoryAction("create", category)} disabled={makingRequest}>Create</button>
+        <button style="color: red;" on:click={() => discardUnsavedCategory(index)} disabled={makingRequest}>X</button>
       {:else}
         <button 
             on:click={() => handleCategoryAction("update", category)}
-            disabled={requesting}
+            disabled={makingRequest}
         >Update</button>
         <button
           style="color: red;"
           on:click={() =>
             confirm("Are you sure?") &&
             handleCategoryAction("delete", category)}
-          disabled={requesting}>
+          disabled={makingRequest}>
             X
         </button>
       {/if}
     </li>
   {/each}
 
-  {#if requesting}
+  {#if makingRequest}
     <p>Making request, please wait...</p>
   {/if}
 </ul>

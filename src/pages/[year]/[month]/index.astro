@@ -13,12 +13,25 @@ const pageNumber = Math.max(1, Number(Astro.url.searchParams.get("paged")) || 1)
 const { year, month } = Astro.params;
 const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
 
-const date = new Date(Number(year), Number(month) - 1, 1);
+const yearNum = Number(year);
+const monthNum = Number(month);
+
+// Check if date is valid
+if (isNaN(yearNum) || isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+  return new Response(null, { status: 404 });
+}
+
+const date = new Date(yearNum, monthNum - 1, 1);
+
+// Check if date is valid after construction
+if (date.getFullYear() !== yearNum || date.getMonth() !== monthNum - 1) {
+  return new Response(null, { status: 404 });
+}
 
 const formattedMonth = date.toLocaleString("default", { month: "long" });
 const formattedYear = getAdjustedYear(date, adjustDisplayDates);
 
-const { posts, pageCount } = await getPosts({ page: pageNumber, date: { year: Number(year), month: Number(month) } });
+const { posts, pageCount } = await getPosts({ page: pageNumber, date: { year: yearNum, month: monthNum } });
 ---
 
 <Layout title={`${formattedMonth} > ${formattedYear} > Roblox Blog`} type="archive date">
