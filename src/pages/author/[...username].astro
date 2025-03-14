@@ -1,6 +1,6 @@
 ---
 import { prisma } from "@lib/prisma";
-import { postWithAuthorAndCategories } from "@lib/prisma/queries";
+import { getPosts } from "@lib/services/posts";
 
 import Layout from "@layouts/Layout.astro";
 
@@ -8,41 +8,13 @@ import Author from "@components/Common/Author.astro";
 import PostPreview from "@components/Post/PostPreview.astro";
 import Pagination from "@components/Common/Pagination.astro";
 
-
-const POSTS_PER_PAGE = 5;
-
 const { username } = Astro.params;
-const pageNumber = Math.max(
-  1,
-  Number(Astro.url.searchParams.get("paged")) || 1
-);
+const pageNumber = Math.max(1, Number(Astro.url.searchParams.get("paged")) || 1);
 
-// Get the total number of posts & calculate the max page count
-const totalPosts = await prisma.post.count({ where: { author: { username } } });
-const maxPageCount = Math.ceil(totalPosts / POSTS_PER_PAGE);
-
-// Validate page number
-if (pageNumber > maxPageCount) {
-  return new Response(null, { status: 404 });
-}
-
-const skip = (pageNumber - 1) * POSTS_PER_PAGE;
-
-const user = await prisma.user.findFirst({
-  where: { username },
-  include: {
-    posts: {
-      include: postWithAuthorAndCategories,
-      orderBy: {
-        dateCreated: "desc",
-      },
-      skip,
-      take: POSTS_PER_PAGE,
-    },
-  },
-});
-
+const user = await prisma.user.findFirst({ where: { username } });
 if (!user) return new Response(null, { status: 404 });
+
+const { posts, pageCount } = await getPosts({ page: pageNumber, username });
 ---
 
 <Layout title={`${user.username} | Roblox Blog`} type="archive">
@@ -62,10 +34,10 @@ if (!user) return new Response(null, { status: 404 });
   <Author user={user} />
 
   {pageNumber > 1 && (
-      <Pagination pageNumber={pageNumber} maxPageCount={maxPageCount} />
+      <Pagination pageNumber={pageNumber} maxPageCount={pageCount} />
     )}
 
-  {user.posts.map((post) => <PostPreview post={post} />)}
+  {posts.map((post) => <PostPreview post={post} />)}
 
-  <Pagination pageNumber={pageNumber} maxPageCount={maxPageCount} />
+  <Pagination pageNumber={pageNumber} maxPageCount={pageCount} />
 </Layout>

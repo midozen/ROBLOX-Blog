@@ -31,7 +31,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
     {
         getMonthYears(firstDate?.dateCreated!, adjustDisplayDates).map((date) => (
           <li>
-            <a href={`/?m=${date.num}`} title={date.formatted} class="date">
+            <a href={`/${date.year}/${date.month}`} title={date.formatted} class="date">
               {date.formatted}
             </a>
           </li>

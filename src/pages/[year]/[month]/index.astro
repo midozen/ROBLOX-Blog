@@ -1,13 +1,37 @@
 ---
 import Layout from "@layouts/Layout.astro";
 
-let { year, month } = Astro.params;
+import PostPreview from "@components/Post/PostPreview.astro";
+import Pagination from "@components/Common/Pagination.astro";
 
-const date = new Date(`${year}-${month}-01`);
+import { getPosts } from "@lib/services/posts";
 
+import { getAdjustedYear } from "@utils/date";
+
+const pageNumber = Math.max(1, Number(Astro.url.searchParams.get("paged")) || 1);
+
+const { year, month } = Astro.params;
 const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
+
+const date = new Date(Number(year), Number(month) - 1, 1);
+
+const formattedMonth = date.toLocaleString("default", { month: "long" });
+const formattedYear = getAdjustedYear(date, adjustDisplayDates);
+
+const { posts, pageCount } = await getPosts({ page: pageNumber, date: { year: Number(year), month: Number(month) } });
 ---
 
-<Layout title={`${date.toLocaleString("default", { month: "long" })} > ${year} > Roblox Blog`}>
-  <h1>Hello</h1>
+<Layout title={`${formattedMonth} > ${formattedYear} > Roblox Blog`} type="archive date">
+  {pageNumber > 1 && (
+    <Pagination pageNumber={pageNumber} maxPageCount={pageCount} />
+  )}
+
+  <h1 class="page-title">
+    Monthly Archives:
+    <span>{formattedMonth} {formattedYear}</span>
+  </h1>
+
+  {posts.map((post) => <PostPreview post={post} />)}
+
+  <Pagination pageNumber={pageNumber} maxPageCount={pageCount} />
 </Layout>

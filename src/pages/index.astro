@@ -1,69 +1,29 @@
 ---
 import Layout from "@layouts/Layout.astro";
 
-import { prisma, getRSSFeed } from "@lib/prisma";
-import { postWithAuthorAndCategories } from "@lib/prisma/queries";
+import { getRSSFeed } from "@lib/prisma";
+
+import { getPosts } from "@lib/services/posts";
 
 import PostPreview from "@components/Post/PostPreview.astro";
 import Pagination from "@components/Common/Pagination.astro";
 
-// How much posts to query per page
-const POSTS_PER_PAGE = 5;
-
 // Extract and validate search paramters
 const pageNumber = Math.max(1, Number(Astro.url.searchParams.get("paged")) || 1);
 const category = Astro.url.searchParams.get("cat") || "";
-const month = Astro.url.searchParams.get("m") || "";
 const searchQuery = Astro.url.searchParams.get("s") || "";
+
 const feed = Astro.url.searchParams.get("feed") || "";
 
 if (feed === "rss")
   return await getRSSFeed();
 
-// Get the total number of posts & calculate the max page count
-const totalPosts = await prisma.post.count();
-const maxPageCount = Math.ceil(totalPosts / POSTS_PER_PAGE);
-
-// Validate page number
-if (pageNumber > maxPageCount) {
-    return new Response(null, { status: 404 });
-}
-
-const skip = (pageNumber - 1) * POSTS_PER_PAGE;
-
-// Construct dynamic query conditions
-const queryConditions = {
-  // TODO: Fix month filtering
-  ...(month && (() => {
-    const year = month.slice(0, 4);
-    const monthPart = month.slice(4);
-    const startDate = new Date(`${year}-${monthPart}-01`);
-    const endDate = new Date(startDate);
-    endDate.setMonth(endDate.getMonth() + 1);
-    return { dateCreated: { gte: startDate, lt: endDate } };
-  })()),
-  ...(category && {
-    categories: {
-      some: {id: Number(category)}
-    }
-  }),
-  ...(searchQuery && {
-    title: { contains: searchQuery } 
-  })
-};
-
-const posts = await prisma.post.findMany({
-  include: postWithAuthorAndCategories,
-  where: queryConditions,
-  skip,
-  take: POSTS_PER_PAGE,
-  orderBy: { dateCreated: "desc" }
-})
+const { posts, pageCount } = await getPosts({ page: pageNumber, category, searchQuery });
 ---
 
 <Layout title="Roblox Blog > Free Games at Roblox.com">
   {pageNumber > 1 && (
-    <Pagination pageNumber={pageNumber} maxPageCount={maxPageCount} />
+    <Pagination pageNumber={pageNumber} maxPageCount={pageCount} />
   )}
 
   {posts.length === 0 && (
@@ -72,5 +32,5 @@ const posts = await prisma.post.findMany({
 
   {posts.map((post) => <PostPreview post={post} />)}
 
-  <Pagination pageNumber={pageNumber} maxPageCount={maxPageCount} />
+  <Pagination pageNumber={pageNumber} maxPageCount={pageCount} />
 </Layout>

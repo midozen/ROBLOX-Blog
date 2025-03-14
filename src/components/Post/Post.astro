@@ -18,6 +18,8 @@ const { user } = Astro.locals;
 
 marked.use(globalMarkedExtensions);
 const content = marked.parse(post.content ?? "Nothing.");
+
+const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
 ---
 
 <article id={`post-${post.id}`} class={`post-${post.id} post type-post status-publish format-standard hentry`}>
@@ -38,7 +40,7 @@ const content = marked.parse(post.content ?? "Nothing.");
           <a class="url fn n" href={`/author/${post.author.username}/`} title={`View all posts by ${post.author.username}`} rel="author">{post.author.username}</a>
         </span>
       </span> - 
-      <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDateWithOrdinal(post.dateCreated)}</time>
+      <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDateWithOrdinal(post.dateCreated, adjustDisplayDates)}</time>
       {user && (
         <span>
           - 
