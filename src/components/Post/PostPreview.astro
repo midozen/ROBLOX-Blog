@@ -1,9 +1,6 @@
 ---
-import { marked } from "marked";
-import { JSDOM } from "jsdom";
-
 import { formatDateWithOrdinal } from "@utils/date";
-import { globalMarkedExtensions } from "@utils/index";
+import { parsePreviewContent } from "@utils/parser/post";
 import { getPostUrl } from "@utils/url";
 
 import type { Post } from "@utils/types/post";
@@ -14,17 +11,6 @@ interface Props {
 
 const { post } = Astro.props;
 const { user } = Astro.locals;
-
-marked.use(globalMarkedExtensions);
-
-async function parsePreviewContent(postContent: string, maxLength: number = 2) {
-  const dom = new JSDOM(await marked(postContent));
-  const document = dom.window.document;
-  const elements = Array.from(document.body.children).slice(0, maxLength);
-  const content = elements.map(el => el.outerHTML).join("");
-  const shouldShowReadMore = document.body.children.length > maxLength;
-  return { content, shouldShowReadMore };
-}
 
 const { content, shouldShowReadMore } = await parsePreviewContent(post.content ?? "Nothing.");
 

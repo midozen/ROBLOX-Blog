@@ -11,8 +11,6 @@ const posts = await prisma.post.findMany({
   orderBy: { dateCreated: "desc" },
   take: 5
 });
-
-const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
 ---
 
 <div id="secondary" class="widget-area" role="complementary">
