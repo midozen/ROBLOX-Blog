@@ -4,7 +4,7 @@ import type { APIContext } from "astro";
 
 export async function GET({ url, cookies, redirect }: APIContext) {
   try {
-    const user = await validateSession(cookies.get("wp-auth-session")?.value);
+    await validateSession(cookies.get("wp-auth-session")?.value);
 
     const id = Number(url.searchParams.get("id"));
 

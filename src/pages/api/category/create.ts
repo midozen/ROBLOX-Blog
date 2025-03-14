@@ -7,7 +7,7 @@ import type { Category } from "@prisma/client";
 
 export async function POST({ request, cookies }: APIContext) {
     try {
-        const user = await validateSession(cookies.get("wp-auth-session")?.value);
+        await validateSession(cookies.get("wp-auth-session")?.value);
 
         const { categoryName } = await request.json() as Category;
 

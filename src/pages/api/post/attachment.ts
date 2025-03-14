@@ -6,10 +6,9 @@ import type { APIContext } from "astro";
 
 export async function POST({ request, cookies, redirect }: APIContext) {
     try {
-        const user = await validateSession(cookies.get("wp-auth-session")?.value);
+        await validateSession(cookies.get("wp-auth-session")?.value);
 
         const formData = await request.formData();
-        // get image file
         const imageFile = formData.get("image") as File;
 
         const file = await uploadAttachment(imageFile);

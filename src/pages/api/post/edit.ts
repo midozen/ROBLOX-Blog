@@ -38,7 +38,7 @@ function validatePostData(data: FormData): PostData {
 
 export async function POST({ request, cookies, redirect }: APIContext) {
   try {
-    const user = await validateSession(cookies.get("wp-auth-session")?.value);
+    await validateSession(cookies.get("wp-auth-session")?.value);
 
     const formData = await request.formData();
     const { id, title, content, categories } = validatePostData(formData);
