@@ -1,13 +1,16 @@
-import { PrismaClient } from "@prisma/client";
 import * as builder from "xmlbuilder";
+
+import { PrismaClient } from "@prisma/client";
+
+import { getPostUrl } from "@utils/url";
 
 export const prisma = new PrismaClient();
 
 export async function getRSSFeed(): Promise<Response> {
   const FEED_CONFIG = {
-    title: "Roblox Blog",
-    siteUrl: `http://blog.${import.meta.env.PUBLIC_WEBSITE_URL}`,
-    description: "The Roblog",
+    title: "ROBLOX Blog",
+    siteUrl: import.meta.env.DEV ? "http://localhost:4321" : `http://blog.${import.meta.env.PUBLIC_WEBSITE_URL}`,
+    description: "Free Games at Roblox.com",
     language: "en",
   };
 
@@ -19,6 +22,7 @@ export async function getRSSFeed(): Promise<Response> {
       select: {
         id: true,
         title: true,
+        slug: true,
         content: true,
         dateCreated: true,
       },
@@ -53,7 +57,7 @@ export async function getRSSFeed(): Promise<Response> {
         .txt(post.content || "No content available")
         .up()
         .ele("link")
-        .txt(`${FEED_CONFIG.siteUrl}/?p=${post.id}`)
+        .txt(`${FEED_CONFIG.siteUrl}${getPostUrl(post)}`)
         .up()
         .ele("pubDate")
         .txt(post.dateCreated.toUTCString())

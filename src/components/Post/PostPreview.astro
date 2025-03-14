@@ -35,7 +35,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
   <header class="entry-header">
     <h1 class="entry-title">
       <a 
-        href={getPostUrl(post, adjustDisplayDates)}
+        href={getPostUrl(post)}
         title={post.title}
         rel="bookmark"
         >
@@ -67,13 +67,13 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
       )}
     </div>
     <div class="comments-link">
-      <a href={`${getPostUrl(post, adjustDisplayDates)}/#comments`} title={`Comment on ${post.title}`}></a>
+      <a href={`${getPostUrl(post)}/#comments`} title={`Comment on ${post.title}`}></a>
     </div>
   </header>
   <div class="entry-content">
     <Fragment set:html={content} />
     {shouldShowReadMore && (
-      <a href={getPostUrl(post, adjustDisplayDates)} class="more-link">Continue reading <span class="meta-nav">→</span></a>
+      <a href={getPostUrl(post)} class="more-link">Continue reading <span class="meta-nav">→</span></a>
     )}
   </div>
 
@@ -89,6 +89,6 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
       />
     </span>
     <span class="sep"> | </span>
-    <span class="comments-link"><a href={`${getPostUrl(post, adjustDisplayDates)}/#comments`} title={`Comment on ${post.title}`}><span class="leave-reply">Leave a reply</span></a></span>
+    <span class="comments-link"><a href={`${getPostUrl(post)}/#comments`} title={`Comment on ${post.title}`}><span class="leave-reply">Leave a reply</span></a></span>
   </footer>
 </article>

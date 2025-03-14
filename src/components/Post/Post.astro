@@ -26,7 +26,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
   <header class="entry-header">
     <h1 class="entry-title">
       <a 
-        href={getPostUrl(post, adjustDisplayDates)}
+        href={getPostUrl(post)}
         title={post.title}
         rel="bookmark"
         >
@@ -40,7 +40,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
           <a class="url fn n" href={`/author/${post.author.username}/`} title={`View all posts by ${post.author.username}`} rel="author">{post.author.username}</a>
         </span>
       </span> - 
-      <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDateWithOrdinal(post.dateCreated, adjustDisplayDates)}</time>
+      <time class="entry-date" datetime={post.dateCreated.toISOString()}>{formatDateWithOrdinal(post.dateCreated)}</time>
       {user && (
         <span>
           - 
@@ -74,7 +74,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
       by
       <a href={`/author/${post.author.username}/`}>{post.author.username}</a>
       . Bookmark the
-      <a href={getPostUrl(post, adjustDisplayDates)}
+      <a href={getPostUrl(post)}
         title={post.title}
         rel="bookmark"
         >permalink</a>.

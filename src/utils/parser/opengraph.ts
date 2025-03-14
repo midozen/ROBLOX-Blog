@@ -2,9 +2,9 @@ import { JSDOM } from "jsdom";
 import { marked } from "marked";
 
 import type { Post } from "@utils/types/post";
+import type { ParsedPost } from "@utils/types/parser";
 
-export async function parsePost(post: Post) {
-  // get the first image, and the first paragraph but cut it off at 150 characters
+export async function parsePost(post: Post): Promise<ParsedPost> {
   const dom = new JSDOM(await marked(post.content ?? "Nothing."));
 
   const image = dom.window.document.querySelector("img");

@@ -1,0 +1,13 @@
+---
+import Layout from "@layouts/Layout.astro";
+
+let { year, month } = Astro.params;
+
+const date = new Date(`${year}-${month}-01`);
+
+const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
+---
+
+<Layout title={`${date.toLocaleString("default", { month: "long" })} > ${year} > Roblox Blog`}>
+  <h1>Hello</h1>
+</Layout>

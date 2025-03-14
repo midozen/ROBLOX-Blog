@@ -45,7 +45,7 @@ const adjustDisplayDates = Astro.cookies.get("larp-mode")?.value === "true";
       {posts.map((post) => (
         <li>
           <a 
-            href={getPostUrl(post, adjustDisplayDates)} 
+            href={getPostUrl(post)} 
             title={post.title}>
             {post.title}
           </a>
