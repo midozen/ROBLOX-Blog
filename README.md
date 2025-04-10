@@ -46,3 +46,6 @@ Recreation of the ROBLOX Blog from 2012 with **Astro + Prisma + R2 Buckets**
     HOST=192.168.1.130 PORT=2456 node ./dist/server/entry.mjs
     ```
 *Follow the same instructions but on Step 3 use `npm run dev` if you're trying to make changes to the blog.*
+
+> [!WARNING]  
+> The banner for the blog will be set to cirkl, which is a now discontinued revival. If you would like this to be something different change the header image under `public/images/header_05.png`
