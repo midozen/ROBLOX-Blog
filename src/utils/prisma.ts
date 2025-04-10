@@ -6,7 +6,7 @@ export const prisma = new PrismaClient();
 export async function getRSSFeed(): Promise<Response> {
     const FEED_CONFIG = {
       title: "Roblox Developers' Journal",
-      siteUrl: "http://blog.cirkl.zone",
+      siteUrl: import.meta.env.DEV ? "http://localhost:4321" : import.meta.env.PUBLIC_PRODUCTION_URL,
       description: "The Roblog",
       language: "en"
     }

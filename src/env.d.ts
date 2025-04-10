@@ -5,3 +5,8 @@ declare namespace App {
       user: User | null;
     }
   }
+
+  interface ImportMetaEnv {
+    readonly PUBLIC_WEBSITE_URL: string;
+    readonly PUBLIC_PRODUCTION_URL: string;
+  }
