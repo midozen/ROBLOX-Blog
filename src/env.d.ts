@@ -13,6 +13,7 @@ interface ImportMetaEnv {
   readonly R2_BUCKET_NAME: string;
   readonly PUBLIC_CDN_URL: string;
   readonly PUBLIC_WEBSITE_URL: string;
+  readonly PUBLIC_WIKI_URL: string?;
 }
 
 interface ImportMeta {

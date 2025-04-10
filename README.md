@@ -19,6 +19,10 @@ Recreation of the ROBLOX Blog from 2012 with **Astro + Prisma + R2 Buckets**
 
     PUBLIC_CDN_URL=https://cdn.somerevival.com # Where the blog resolves profile pictures from
     PUBLIC_WEBSITE_URL=somerevival.com # Everything related to https://SUBDOMAIN.roblox.com will fetch from this
+
+    # OPTIONAL
+
+    # PUBLIC_WIKI_URL=https://somerevival.wiki # instead of wiki.roblox.com it would be a custom url
     ```
 
 2. Generate the database from the prisma schema by running this in your command line.
